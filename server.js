@@ -443,11 +443,15 @@ app.post('/api/integrations/woocommerce/webhook', (req, res) => {
   res.json({ success: true, synced_order: formatted });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`====================================================`);
-  console.log(`🚀 RuleMind Server running on http://localhost:${PORT}`);
-  console.log(`⚡ Zero-AI Deterministic Rule & DB Engine ready`);
-  console.log(`🔌 Connectors ready for Shopify, WordPress & Custom Web`);
-  console.log(`====================================================`);
-});
+// Start server if not running in Vercel serverless environment
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`====================================================`);
+    console.log(`🚀 RuleMind Server running on http://localhost:${PORT}`);
+    console.log(`⚡ Zero-AI Deterministic Rule & DB Engine ready`);
+    console.log(`🔌 Connectors ready for Shopify, WordPress & Custom Web`);
+    console.log(`====================================================`);
+  });
+}
+
+module.exports = app;

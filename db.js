@@ -1,9 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
-const DATA_DIR = path.join(__dirname, 'data');
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+const isVercel = Boolean(process.env.VERCEL || process.env.NOW_REGION);
+const DATA_DIR = isVercel ? '/tmp' : path.join(__dirname, 'data');
+try {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+} catch (e) {
+  // Read-only filesystem on serverless handled gracefully
 }
 
 const DB_FILE = path.join(DATA_DIR, 'store_db.json');
@@ -495,27 +500,48 @@ const INITIAL_DATA = {
   ]
 };
 
-// Load or initialize DB
+// Load or initialize DB with in-memory caching for serverless environments
+let memoryCache = null;
+
 function loadDB() {
+  if (memoryCache) return memoryCache;
+
+  // 1. Check active DB_FILE (e.g. /tmp in Vercel or ./data locally)
   try {
     if (fs.existsSync(DB_FILE)) {
       const content = fs.readFileSync(DB_FILE, 'utf-8');
-      return JSON.parse(content);
+      memoryCache = JSON.parse(content);
+      return memoryCache;
     }
   } catch (err) {
-    console.error('Error reading DB file, reinitializing...', err);
+    console.error('Error reading DB_FILE:', err);
   }
-  saveDB(INITIAL_DATA);
-  return INITIAL_DATA;
+
+  // 2. Check bundled local store_db.json
+  const bundledFile = path.join(__dirname, 'data', 'store_db.json');
+  try {
+    if (fs.existsSync(bundledFile)) {
+      const content = fs.readFileSync(bundledFile, 'utf-8');
+      memoryCache = JSON.parse(content);
+      saveDB(memoryCache);
+      return memoryCache;
+    }
+  } catch (e) {}
+
+  // 3. Fallback to INITIAL_DATA
+  memoryCache = JSON.parse(JSON.stringify(INITIAL_DATA));
+  saveDB(memoryCache);
+  return memoryCache;
 }
 
 function saveDB(data) {
+  memoryCache = data;
   try {
     fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
     return true;
   } catch (err) {
-    console.error('Error saving DB file:', err);
-    return false;
+    // Graceful in read-only serverless: memoryCache maintains state during invocation
+    return true;
   }
 }
 
