@@ -16,7 +16,19 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Normalize URLs in serverless so both /api/... and /... match Express routes
+app.use((req, res, next) => {
+  if (req.url && !req.url.startsWith('/api') && !req.url.startsWith('/css') && !req.url.startsWith('/js')) {
+    req.url = '/api' + req.url;
+  }
+  next();
+});
+
+// Serve static assets locally (on Vercel, Edge CDN serves public/ automatically)
+if (!process.env.VERCEL) {
+  app.use(express.static(path.join(__dirname, 'public')));
+}
 
 // -------------------------------------------------------------
 // CHAT API

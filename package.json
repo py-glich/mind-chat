@@ -1,15 +1,15 @@
 {
   "name": "rulemind-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "MindChat / RuleMind Zero-AI Support Platform",
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "echo 'Build successful'"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "engines": {
+    "node": ">=18.x"
+  },
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^18.0.10",
