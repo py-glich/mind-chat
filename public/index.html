@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindChat: The Zero-AI Rule Customer Platform for E-Commerce Brands</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23000'/><path d='M30 50h40M50 30v40' stroke='%233b82f6' stroke-width='12' stroke-linecap='round'/></svg>">
+</head>
+<body>
+
+  <!-- ======================================================================
+       NAVBAR (Exact MindChat Header with Mega Menu, Log In & Sign Up)
+       ====================================================================== -->
+  <header class="navbar">
+    <div class="brand-wrap">
+      <div class="brand-logo" onclick="app.showLanding()">
+        <div class="logo-mark">C</div>
+        <span><strong class="word-mind">mind</strong><span class="word-chat">chat</span></span>
+      </div>
+
+      <ul class="nav-menu">
+        <li class="nav-item dropdown">
+          <span>Product</span>
+          <span style="font-size:0.7rem;">▼</span>
+          <div class="mega-menu">
+            <div class="mega-grid">
+              <a href="#inbox" class="mega-link" onclick="app.scrollToSection('inbox')">
+                <div class="mega-icon">📥</div>
+                <div>
+                  <div style="font-weight:700; font-size:0.85rem; color:#fff;">Omnichannel Inbox</div>
+                  <div style="font-size:0.75rem; color:var(--text-secondary);">Shopify, WooCommerce, and web chats in one desk.</div>
+                </div>
+              </a>
+              <a href="#rules" class="mega-link" onclick="app.scrollToSection('rules')">
+                <div class="mega-icon">⚡</div>
+                <div>
+                  <div style="font-weight:700; font-size:0.85rem; color:#fff;">Rule Agent Engine</div>
+                  <div style="font-size:0.75rem; color:var(--text-secondary);">Deterministic database lookups with zero AI hallucination.</div>
+                </div>
+              </a>
+              <a href="#customers" class="mega-link" onclick="app.scrollToSection('customers')">
+                <div class="mega-icon">👥</div>
+                <div>
+                  <div style="font-weight:700; font-size:0.85rem; color:#fff;">CRM & Customer 360</div>
+                  <div style="font-size:0.75rem; color:var(--text-secondary);">Net LTV, orders history, and customer tags.</div>
+                </div>
+              </a>
+              <a href="#connectors" class="mega-link" onclick="app.scrollToSection('connectors')">
+                <div class="mega-icon">🛍️</div>
+                <div>
+                  <div style="font-weight:700; font-size:0.85rem; color:#fff;">Built for Shopify & WordPress</div>
+                  <div style="font-size:0.75rem; color:var(--text-secondary);">1-line liquid embed, PHP snippets, and webhooks.</div>
+                </div>
+              </a>
+            </div>
+
+            <div class="mega-promo-card">
+              <div>
+                <span class="pill-badge-mint" style="font-size:0.65rem;">LIVE WALKTHROUGH</span>
+                <h5 style="margin-top:0.5rem; font-size:0.95rem;">See MindChat on your own store</h5>
+                <p style="font-size:0.78rem; color:var(--text-secondary); margin-top:0.4rem;">
+                  Your catalogue, your orders database, real deterministic answers.
+                </p>
+              </div>
+              <button class="btn-pill btn-pill-primary" style="font-size:0.78rem; padding:0.45rem 1rem;" onclick="app.openAuthModal('signup')">
+                Get Started →
+              </button>
+            </div>
+          </div>
+        </li>
+        <li class="nav-item" onclick="app.scrollToSection('rules')">Rule Agent</li>
+        <li class="nav-item" onclick="app.scrollToSection('inbox')">Inbox</li>
+        <li class="nav-item" onclick="app.scrollToSection('customers')">Customers</li>
+        <li class="nav-item" onclick="app.scrollToSection('faq')">FAQ</li>
+      </ul>
+    </div>
+
+    <!-- Right Actions -->
+    <div class="nav-actions">
+      <!-- Guest State -->
+      <div id="nav-guest-actions" style="display:flex; align-items:center; gap:1.25rem;">
+        <button class="nav-link-login" onclick="app.openAuthModal('login')">Log in</button>
+        <button class="btn-pill btn-pill-primary" onclick="app.openAuthModal('signup')">Book a demo →</button>
+      </div>
+
+      <!-- Logged-in State -->
+      <div id="nav-user-actions" class="user-nav-badge">
+        <div class="user-avatar-circle" id="nav-user-avatar">M</div>
+        <span id="nav-user-name" style="font-weight:600;">Merchant</span>
+        <button class="btn-pill btn-pill-secondary" style="padding:0.25rem 0.65rem; font-size:0.75rem;" onclick="app.showDashboard()">Dashboard</button>
+        <button style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.75rem;" onclick="app.logout()">Log out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======================================================================
+       PAGE 1: MARKETING HOMEPAGE (Exact MindChat Design in Black Theme)
+       ====================================================================== -->
+  <div id="view-homepage">
+    <div class="hero-wrapper">
+      <div class="hero-glow"></div>
+
+      <!-- Top Announcement Pill -->
+      <div class="announcement-pill">
+        <span class="pill-badge-mint">Zero-AI Engine</span>
+        <span>Deterministic database lookups on Shopify, WordPress & Custom Web →</span>
+      </div>
+
+      <!-- Main Headline with exact Instrument Serif Italic styling -->
+      <h1 class="hero-heading">
+        Every chat, order and query.<br>
+        <span class="serif-italic">One mind</span> behind them all.
+      </h1>
+
+      <p class="hero-subtitle">
+        MindChat brings your Shopify, WordPress, and custom store conversations into one precision rule-based workspace, wired directly into your orders and inventory database. Answer in milliseconds, verify live tracking numbers, and eliminate AI hallucinations completely.
+      </p>
+
+      <div class="hero-cta-row">
+        <button class="btn-pill btn-pill-primary" onclick="app.openAuthModal('signup')">
+          Get Started Free →
+        </button>
+        <button class="btn-pill btn-pill-secondary" onclick="app.triggerDemoChat()">
+          Try Live Interactive Demo
+        </button>
+      </div>
+
+      <div class="hero-trust-row">
+        <div><span>✓</span> Built for Shopify & WooCommerce</div>
+        <div><span>✓</span> 0% AI Hallucinations Guaranteed</div>
+        <div><span>✓</span> Sub-50ms Database Lookups</div>
+      </div>
+
+      <!-- Hero Workspace Mockup (Exact MindChat Multi-Pane Application Preview) -->
+      <div class="hero-mockup-frame">
+        <div class="mockup-top-bar">
+          <div class="mockup-dots">
+            <div class="mockup-dot"></div>
+            <div class="mockup-dot"></div>
+            <div class="mockup-dot"></div>
+          </div>
+          <div class="mockup-address">go.mindchatai.app/dashboard</div>
+          <div style="font-size:0.75rem; color:var(--accent-green); font-weight:600;">● Engine: Active</div>
+        </div>
+
+        <div class="mockup-grid">
+          <!-- 1. Left Dark Icon Bar -->
+          <div class="mockup-icon-sidebar">
+            <div class="icon-bar-btn active" title="Inbox">📥</div>
+            <div class="icon-bar-btn" title="Rule Engine">⚡</div>
+            <div class="icon-bar-btn" title="Customers">👥</div>
+            <div class="icon-bar-btn" title="Orders">📦</div>
+            <div class="icon-bar-btn" title="Campaigns">🚀</div>
+            <div class="icon-bar-btn" title="Analytics">📊</div>
+          </div>
+
+          <!-- 2. Queue List -->
+          <div class="mockup-queue-col">
+            <div class="queue-header">
+              <span style="font-weight:700; font-size:0.85rem;">Conversations</span>
+              <div class="queue-tabs">
+                <span class="queue-tab active">All</span>
+                <span class="queue-tab">Rules (96)</span>
+              </div>
+            </div>
+
+            <ul class="queue-list">
+              <li class="queue-item active" onclick="app.mockSelect('jane')">
+                <div style="display:flex; justify-content:space-between; font-weight:600; font-size:0.85rem;">
+                  <span>Jane Doe</span>
+                  <span style="font-size:0.7rem; color:var(--text-muted);">2m ago</span>
+                </div>
+                <div style="font-size:0.78rem; color:var(--text-secondary); margin-top:2px;">Where is order #1042?</div>
+                <div style="display:flex; gap:4px; margin-top:5px;">
+                  <span class="badge-channel">Shopify</span>
+                  <span class="brand-badge" style="font-size:0.62rem;">Rule: Order Found</span>
+                </div>
+              </li>
+
+              <li class="queue-item" onclick="app.mockSelect('alex')">
+                <div style="display:flex; justify-content:space-between; font-weight:600; font-size:0.85rem;">
+                  <span>Alex Smith</span>
+                  <span style="font-size:0.7rem; color:var(--text-muted);">14m ago</span>
+                </div>
+                <div style="font-size:0.78rem; color:var(--text-secondary); margin-top:2px;">Is stealth keycaps in stock?</div>
+                <div style="display:flex; gap:4px; margin-top:5px;">
+                  <span class="badge-channel">WooCommerce</span>
+                  <span class="brand-badge" style="font-size:0.62rem;">Rule: Stock Check</span>
+                </div>
+              </li>
+
+              <li class="queue-item" onclick="app.mockSelect('sarah')">
+                <div style="display:flex; justify-content:space-between; font-weight:600; font-size:0.85rem;">
+                  <span>Sarah Connor</span>
+                  <span style="font-size:0.7rem; color:var(--text-muted);">1h ago</span>
+                </div>
+                <div style="font-size:0.78rem; color:var(--text-secondary); margin-top:2px;">Speak with live representative</div>
+                <div style="display:flex; gap:4px; margin-top:5px;">
+                  <span class="badge-channel">Web</span>
+                  <span style="font-size:0.62rem; color:#f59e0b; border:1px solid #f59e0b; padding:1px 5px; border-radius:10px;">Human Takeover</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- 3. Center Chat Pane -->
+          <div class="mockup-chat-col">
+            <div class="mockup-chat-header">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-weight:700; font-size:0.9rem;" id="mock-chat-title">Jane Doe</span>
+                <span class="badge-channel" id="mock-chat-badge">Shopify Storefront</span>
+              </div>
+              <span class="brand-badge" style="font-size:0.68rem;">⚡ Zero-AI Rule Mode</span>
+            </div>
+
+            <div class="mockup-chat-messages" id="mock-chat-stream">
+              <div class="mock-msg user">
+                Hi, where is my order #1042?
+              </div>
+
+              <div class="mock-msg bot">
+                📦 <strong>Order #1042 Verified in Database!</strong><br><br>
+                • <strong>Customer:</strong> Jane Doe<br>
+                • <strong>Status:</strong> Out for Delivery<br>
+                • <strong>Carrier:</strong> FedEx Home Delivery<br>
+                • <strong>Estimated Delivery:</strong> Today by 5:30 PM<br>
+                • <strong>Total:</strong> $108.00
+
+                <div class="mock-card">
+                  <div style="display:flex; justify-content:space-between; font-weight:700;">
+                    <span>Tracking: FX-982194821</span>
+                    <span style="color:var(--accent-green);">ON TIME</span>
+                  </div>
+                  <div style="color:var(--text-secondary); font-size:0.72rem; margin-top:4px;">
+                    1x Minimalist Matte Black Desk Mat, 1x Stealth Keycaps
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Right Customer 360 Drawer -->
+          <div class="mockup-profile-col">
+            <div class="profile-avatar-row">
+              <div class="profile-avatar">JD</div>
+              <div>
+                <div style="font-weight:700; font-size:0.9rem;">Jane Doe</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">Customer since 2024</div>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:0.4rem;">
+              <span class="brand-badge" style="font-size:0.65rem;">VIP Merchant</span>
+              <span class="badge-channel">Low Return Risk</span>
+            </div>
+
+            <div class="profile-kpi-grid">
+              <div class="profile-kpi-box">
+                <div style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase;">Net LTV</div>
+                <div style="font-size:1.15rem; font-weight:800; color:#fff;">$342.00</div>
+              </div>
+              <div class="profile-kpi-box">
+                <div style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase;">Orders</div>
+                <div style="font-size:1.15rem; font-weight:800; color:#fff;">3 Orders</div>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.5rem;">
+                Recent Database Orders
+              </div>
+              <div style="background:#13131c; border:1px solid var(--border-subtle); border-radius:6px; padding:0.65rem;">
+                <div style="display:flex; justify-content:space-between; font-weight:600; font-size:0.8rem;">
+                  <span>#1042 — $108.00</span>
+                  <span style="color:var(--accent-green);">Out for delivery</span>
+                </div>
+                <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">FedEx • Today</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Brand Marquee Strip -->
+    <section class="marquee-section">
+      <div class="marquee-label">Trusted by fast-growing e-commerce merchants</div>
+      <div class="marquee-track">
+        <div class="marquee-brand">SYOSS SKIN SCIENCES</div>
+        <div class="marquee-brand">RAWAYAT</div>
+        <div class="marquee-brand">ALIZEH</div>
+        <div class="marquee-brand">NIGHT NEED</div>
+        <div class="marquee-brand">GOMILA INTERACTIVE</div>
+        <div class="marquee-brand">HAIR PANTRY</div>
+        <div class="marquee-brand">ISMAIL WEAR</div>
+        <div class="marquee-brand">ENGINE APPAREL</div>
+        <!-- Duplicated for seamless loop -->
+        <div class="marquee-brand">SYOSS SKIN SCIENCES</div>
+        <div class="marquee-brand">RAWAYAT</div>
+        <div class="marquee-brand">ALIZEH</div>
+        <div class="marquee-brand">NIGHT NEED</div>
+        <div class="marquee-brand">GOMILA INTERACTIVE</div>
+        <div class="marquee-brand">HAIR PANTRY</div>
+        <div class="marquee-brand">ISMAIL WEAR</div>
+        <div class="marquee-brand">ENGINE APPAREL</div>
+      </div>
+    </section>
+
+    <!-- Product Tour Section (See it at work) -->
+    <section class="section-wrapper" id="inbox">
+      <div class="section-head">
+        <div class="section-eyebrow">SEE IT AT WORK</div>
+        <h2 class="section-title">Everything your customer team needs. <span class="serif-italic">Finally in one place.</span></h2>
+        <p class="section-subtext">
+          Zero hallucinations. Built for high-speed stores running on Shopify, WooCommerce, and modern headless frontends.
+        </p>
+      </div>
+
+      <div class="tour-tabs">
+        <button class="tour-tab-btn active" onclick="app.setTourTab('dashboard', this)">Dashboard</button>
+        <button class="tour-tab-btn" onclick="app.setTourTab('inbox', this)">Omnichannel Inbox</button>
+        <button class="tour-tab-btn" onclick="app.setTourTab('rules', this)">Rule Engine</button>
+        <button class="tour-tab-btn" onclick="app.setTourTab('customers', this)">Customer 360</button>
+        <button class="tour-tab-btn" onclick="app.setTourTab('connectors', this)">Storefront Connectors</button>
+      </div>
+
+      <div id="tour-display-box" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-lg); padding:2rem; min-height:300px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+          <div>
+            <h3 id="tour-title" style="font-size:1.4rem;">The whole business, at a single glance</h3>
+            <p id="tour-desc" style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.25rem;">Real-time order statuses, database inquiries, and conversion attribution.</p>
+          </div>
+          <button class="btn-pill btn-pill-primary" onclick="app.openAuthModal('signup')">Try on your store →</button>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:1.25rem;" id="tour-grid-items">
+          <div style="background:#13131c; border:1px solid var(--border-color); border-radius:10px; padding:1.25rem;">
+            <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Sub-50ms Lookups</div>
+            <div style="font-size:1.8rem; font-weight:800; color:#fff; margin:0.4rem 0;">41ms</div>
+            <div style="font-size:0.78rem; color:var(--accent-green);">Instant order retrieval from database</div>
+          </div>
+          <div style="background:#13131c; border:1px solid var(--border-color); border-radius:10px; padding:1.25rem;">
+            <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">AI Hallucinations</div>
+            <div style="font-size:1.8rem; font-weight:800; color:var(--accent-blue); margin:0.4rem 0;">0.0%</div>
+            <div style="font-size:0.78rem; color:var(--text-secondary);">100% verified against store records</div>
+          </div>
+          <div style="background:#13131c; border:1px solid var(--border-color); border-radius:10px; padding:1.25rem;">
+            <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Live Automations</div>
+            <div style="font-size:1.8rem; font-weight:800; color:#fff; margin:0.4rem 0;">99.2%</div>
+            <div style="font-size:0.78rem; color:var(--accent-green);">Orders, inventory, coupons & returns</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Support Teams Grid -->
+    <section class="section-wrapper" id="rules">
+      <div class="section-head">
+        <div class="section-eyebrow">FOR SUPPORT TEAMS</div>
+        <h2 class="section-title">Built for teams that take <span class="serif-italic">accuracy</span> personally.</h2>
+      </div>
+
+      <div class="support-grid">
+        <div class="support-card">
+          <div class="support-icon">🎯</div>
+          <h4 style="font-size:1rem; margin-bottom:0.4rem;">Deterministic Rules</h4>
+          <p style="font-size:0.82rem; color:var(--text-secondary);">No probabilistic hallucinations. Exactly what your policy and database state.</p>
+        </div>
+        <div class="support-card">
+          <div class="support-icon">⚡</div>
+          <h4 style="font-size:1rem; margin-bottom:0.4rem;">Live Database Queries</h4>
+          <p style="font-size:0.82rem; color:var(--text-secondary);">Syncs with Shopify, WooCommerce, or custom SQL databases in real time.</p>
+        </div>
+        <div class="support-card">
+          <div class="support-icon">👨‍💼</div>
+          <h4 style="font-size:1rem; margin-bottom:0.4rem;">1-Click Human Takeover</h4>
+          <p style="font-size:0.82rem; color:var(--text-secondary);">Seamless handoff when customers request a person or an edge-case arises.</p>
+        </div>
+        <div class="support-card">
+          <div class="support-icon">🛍️</div>
+          <h4 style="font-size:1rem; margin-bottom:0.4rem;">Shopify Plus Ready</h4>
+          <p style="font-size:0.82rem; color:var(--text-secondary);">Pull line items, fulfillment tags, and carrier tracking without extra plugins.</p>
+        </div>
+        <div class="support-card">
+          <div class="support-icon">🌐</div>
+          <h4 style="font-size:1rem; margin-bottom:0.4rem;">WordPress / WooCommerce</h4>
+          <p style="font-size:0.82rem; color:var(--text-secondary);">Native webhook support for immediate order status updates.</p>
+        </div>
+        <div class="support-card">
+          <div class="support-icon">⬛</div>
+          <h4 style="font-size:1rem; margin-bottom:0.4rem;">Minimalist Black Theme</h4>
+          <p style="font-size:0.82rem; color:var(--text-secondary);">Sleek, dark, distraction-free interface matching premium brands.</p>
+        </div>
+        <div class="support-card">
+          <div class="support-icon">🏷️</div>
+          <h4 style="font-size:1rem; margin-bottom:0.4rem;">Dynamic Coupon Engine</h4>
+          <p style="font-size:0.82rem; color:var(--text-secondary);">Surface eligible discount vouchers and minimum spend criteria automatically.</p>
+        </div>
+        <div class="support-card">
+          <div class="support-icon">🔒</div>
+          <h4 style="font-size:1rem; margin-bottom:0.4rem;">Enterprise Privacy</h4>
+          <p style="font-size:0.82rem; color:var(--text-secondary);">No customer conversations sent to third-party generative models for training.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Accordions -->
+    <section class="section-wrapper" id="faq">
+      <div class="section-head">
+        <div class="section-eyebrow">FAQ</div>
+        <h2 class="section-title">Questions, answered.</h2>
+      </div>
+
+      <div style="max-width:800px; margin:0 auto; display:flex; flex-direction:column; gap:1rem;">
+        <details style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:1.25rem; cursor:pointer;" open>
+          <summary style="font-weight:700; font-size:1rem; color:#fff;">Will this bot make things up like AI chatbots do?</summary>
+          <p style="color:var(--text-secondary); font-size:0.88rem; margin-top:0.75rem; line-height:1.6;">
+            <strong>No.</strong> Unlike generative LLMs, MindChat runs on a 100% deterministic rule engine. When a customer asks about an order or stock, it directly queries your store database. If a record doesn't exist, it reliably prompts for an order number or connects to your human team.
+          </p>
+        </details>
+
+        <details style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:1.25rem; cursor:pointer;">
+          <summary style="font-weight:700; font-size:1rem; color:#fff;">Do I need WhatsApp to use this?</summary>
+          <p style="color:var(--text-secondary); font-size:0.88rem; margin-top:0.75rem; line-height:1.6;">
+            <strong>No!</strong> WhatsApp is completely optional and excluded by default. MindChat focuses on keeping high-intent shoppers directly on your store with our high-speed, web-native embed widget to maximize checkout conversions.
+          </p>
+        </details>
+
+        <details style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:1.25rem; cursor:pointer;">
+          <summary style="font-weight:700; font-size:1rem; color:#fff;">Which platforms can my agent connect to?</summary>
+          <p style="color:var(--text-secondary); font-size:0.88rem; margin-top:0.75rem; line-height:1.6;">
+            Your agent connects natively to <strong>Shopify</strong> (via theme app embeds & webhooks), <strong>WordPress / WooCommerce</strong>, and <strong>any custom website</strong> (HTML, React, Vue, Next.js) using our single-line async script tag.
+          </p>
+        </details>
+      </div>
+    </section>
+
+    <!-- Bottom CTA Banner -->
+    <section class="section-wrapper">
+      <div style="background:linear-gradient(135deg, #10101b 0%, #151528 100%); border:1px solid #282845; border-radius:var(--radius-xl); padding:4rem 2rem; text-align:center; box-shadow:var(--shadow-lg);">
+        <h2 style="font-size:2.8rem; margin-bottom:1rem;">See MindChat run on <span class="serif-italic">your store.</span></h2>
+        <p style="color:var(--text-secondary); font-size:1.1rem; max-width:600px; margin:0 auto 2rem;">
+          Connect your store in minutes. 100% deterministic accuracy with zero hallucinations.
+        </p>
+        <button class="btn-pill btn-pill-primary" style="padding:0.75rem 2rem; font-size:1rem;" onclick="app.openAuthModal('signup')">
+          Get Started Now →
+        </button>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="brand-logo" style="margin-bottom:1rem;">
+            <div class="logo-mark">C</div>
+            <span><strong class="word-mind">mind</strong><span class="word-chat">chat</span></span>
+          </div>
+          <p style="font-size:0.82rem; color:var(--text-secondary); line-height:1.6; max-width:280px;">
+            The zero-AI deterministic customer support platform for Shopify, WooCommerce, and custom web stores.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h5>Product</h5>
+          <ul>
+            <li><a href="#inbox">Omnichannel Inbox</a></li>
+            <li><a href="#rules">Rule Agent</a></li>
+            <li><a href="#customers">Customer 360</a></li>
+            <li><a href="#connectors">Store Connectors</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Integrations</h5>
+          <ul>
+            <li><a href="#connectors">Shopify Storefront</a></li>
+            <li><a href="#connectors">WooCommerce</a></li>
+            <li><a href="#connectors">Custom Webhooks</a></li>
+            <li><a href="#connectors">REST API</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Platform</h5>
+          <ul>
+            <li><a href="#" onclick="app.openAuthModal('login')">Merchant Login</a></li>
+            <li><a href="#" onclick="app.openAuthModal('signup')">Create Free Account</a></li>
+            <li><a href="/demo-store.html" target="_blank">Storefront Live Demo</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2026 MindChat Inc. All rights reserved. Minimalist Black Edition.</div>
+        <div>No WhatsApp Dependency • Privacy-First Rule Engine</div>
+      </div>
+
+      <div class="footer-watermark">mindchat</div>
+    </footer>
+  </div>
+
+  <!-- ======================================================================
+       PAGE 2: AUTH MODAL (Log In / Sign Up)
+       ====================================================================== -->
+  <div class="auth-modal-overlay" id="modal-auth">
+    <div class="auth-modal-box">
+      <button style="position:absolute; top:1.25rem; right:1.25rem; background:none; border:none; color:var(--text-muted); font-size:1.2rem; cursor:pointer;" onclick="app.closeAuthModal()">✕</button>
+
+      <div class="auth-tabs">
+        <div class="auth-tab active" id="auth-tab-login" onclick="app.switchAuthMode('login')">Log In</div>
+        <div class="auth-tab" id="auth-tab-signup" onclick="app.switchAuthMode('signup')">Sign Up</div>
+      </div>
+
+      <!-- Log In Form -->
+      <form id="auth-form-login" onsubmit="app.handleAuth(event, 'login')">
+        <div class="auth-input-group">
+          <label class="auth-label">Store Email</label>
+          <input type="email" id="login-email" class="auth-input" value="merchant@rulemind.app" required>
+        </div>
+        <div class="auth-input-group">
+          <label class="auth-label">Password</label>
+          <input type="password" id="login-password" class="auth-input" value="••••••••" required>
+        </div>
+        <button type="submit" class="btn-pill btn-pill-primary" style="width:100%; margin-top:0.5rem; border-radius:var(--radius-sm);">
+          Sign In to Dashboard →
+        </button>
+
+        <div style="text-align:center; margin-top:1.25rem;">
+          <button type="button" class="btn-pill btn-pill-secondary" style="width:100%; font-size:0.8rem; border-radius:var(--radius-sm);" onclick="app.quickDemoLogin()">
+            ⚡ 1-Click Demo Login
+          </button>
+        </div>
+      </form>
+
+      <!-- Sign Up Form -->
+      <form id="auth-form-signup" style="display:none;" onsubmit="app.handleAuth(event, 'signup')">
+        <div class="auth-input-group">
+          <label class="auth-label">Your Name</label>
+          <input type="text" id="signup-name" class="auth-input" placeholder="e.g. Alex Mercer" required>
+        </div>
+        <div class="auth-input-group">
+          <label class="auth-label">Store Name</label>
+          <input type="text" id="signup-store" class="auth-input" placeholder="e.g. Apex Minimalist Wear" required>
+        </div>
+        <div class="auth-input-group">
+          <label class="auth-label">Email Address</label>
+          <input type="email" id="signup-email" class="auth-input" placeholder="alex@store.com" required>
+        </div>
+        <button type="submit" class="btn-pill btn-pill-primary" style="width:100%; margin-top:0.5rem; border-radius:var(--radius-sm);">
+          Create Merchant Account →
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       PAGE 3: REAL FUNCTION DASHBOARD (Multi-Bot & Old Bot Support)
+       ====================================================================== -->
+  <div id="view-dashboard" class="dashboard-screen">
+    <!-- Top Action Bar with Bot Selector and "+ New Bot" button -->
+    <div class="dash-topbar">
+      <div class="bot-selector-wrap">
+        <span style="font-size:0.85rem; color:var(--text-muted);">Active Bot:</span>
+        <select class="bot-select-dropdown" id="dash-bot-select" onchange="app.switchActiveBot(this.value)">
+          <option value="bot-default">Primary E-Commerce Agent (Old Bot)</option>
+        </select>
+        <span class="brand-badge" id="dash-bot-platform-badge">Shopify Storefront</span>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:1rem;">
+        <!-- The "+ New Bot" Trigger Button -->
+        <button class="btn-new-bot-glow" onclick="app.launchStarWizard()">
+          <span>✨</span>
+          <span>+ Create New Bot</span>
+        </button>
+
+        <button class="btn-pill btn-pill-secondary" style="font-size:0.8rem; padding:0.4rem 0.9rem;" onclick="app.showLanding()">
+          ← Store Homepage
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Bot Metrics KPI Row -->
+    <div class="dash-kpi-row">
+      <div class="dash-kpi-card">
+        <div class="dash-kpi-label">Total Chats Handled</div>
+        <div class="dash-kpi-num" id="kpi-chats">128</div>
+        <div style="font-size:0.75rem; color:var(--accent-green); margin-top:4px;">100% Automated by rules</div>
+      </div>
+      <div class="dash-kpi-card">
+        <div class="dash-kpi-label">Database Queries Run</div>
+        <div class="dash-kpi-num" id="kpi-queries">247</div>
+        <div style="font-size:0.75rem; color:var(--accent-blue); margin-top:4px;">Sub-millisecond latency</div>
+      </div>
+      <div class="dash-kpi-card">
+        <div class="dash-kpi-label">Rule Accuracy Rate</div>
+        <div class="dash-kpi-num" style="color:var(--accent-green);">100%</div>
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">0% AI Hallucinations</div>
+      </div>
+      <div class="dash-kpi-card">
+        <div class="dash-kpi-label">Human Agent Handoffs</div>
+        <div class="dash-kpi-num" id="kpi-handoffs">3</div>
+        <div style="font-size:0.75rem; color:#f59e0b; margin-top:4px;">Escalated seamlessly</div>
+      </div>
+    </div>
+
+    <!-- Dashboard Sub-Tabs -->
+    <div class="dash-nav-bar">
+      <button class="dash-nav-btn active" data-subview="sub-inbox" onclick="app.switchDashTab('sub-inbox', this)">
+        Unified Inbox (<span id="dash-inbox-count">0</span>)
+      </button>
+      <button class="dash-nav-btn" data-subview="sub-rules" onclick="app.switchDashTab('sub-rules', this)">
+        Rule Studio
+      </button>
+      <button class="dash-nav-btn" data-subview="sub-database" onclick="app.switchDashTab('sub-database', this)">
+        Store Database
+      </button>
+      <button class="dash-nav-btn" data-subview="sub-connectors" onclick="app.switchDashTab('sub-connectors', this)">
+        Embed & Connectors
+      </button>
+    </div>
+
+    <!-- SUBVIEW A: LIVE INBOX -->
+    <div id="sub-inbox" class="dash-subview active">
+      <div class="inbox-container">
+        <!-- Sidebar -->
+        <aside class="inbox-sidebar">
+          <div class="inbox-sidebar-header">
+            <span style="font-weight:700; font-size:0.88rem;">Customer Queue</span>
+            <button class="btn btn-secondary btn-sm" onclick="app.refreshInbox()">↻ Refresh</button>
+          </div>
+          <ul class="conv-list" id="inbox-conv-list">
+            <li style="padding:1.5rem; text-align:center; color:var(--text-muted); font-size:0.85rem;">
+              Loading conversations...
+            </li>
+          </ul>
+        </aside>
+
+        <!-- Chat Pane -->
+        <section class="inbox-chat-pane">
+          <div class="inbox-chat-header">
+            <div class="chat-header-user">
+              <div class="avatar-circle" id="chat-header-avatar">?</div>
+              <div>
+                <div style="font-weight:600; font-size:0.9rem;" id="chat-header-name">Select a conversation</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);" id="chat-header-email">---</div>
+              </div>
+            </div>
+
+            <div>
+              <button id="btn-toggle-takeover" class="btn btn-secondary btn-sm" onclick="app.toggleTakeover()">
+                Take Over Conversation
+              </button>
+            </div>
+          </div>
+
+          <div class="chat-messages-area" id="chat-messages-container">
+            <div style="margin:auto; text-align:center; color:var(--text-muted);">
+              Select a customer conversation from the left to view the thread and live database rules.
+            </div>
+          </div>
+
+          <div class="chat-input-bar">
+            <input type="text" id="agent-reply-input" class="chat-input-field" placeholder="Type response as Support Specialist..." onkeydown="if(event.key==='Enter') app.sendAgentReply()">
+            <button class="btn btn-primary" onclick="app.sendAgentReply()">Send Reply</button>
+          </div>
+        </section>
+
+        <!-- Customer 360 -->
+        <aside class="inbox-customer-pane">
+          <div>
+            <div class="pane-section-title">Customer 360 Profile</div>
+            <div class="cust-profile-box">
+              <div style="font-size:1.05rem; font-weight:700;" id="cust-360-name">---</div>
+              <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:2px;" id="cust-360-email">---</div>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;" id="cust-360-channel">Source: Storefront Web</div>
+
+              <div class="cust-stat-grid">
+                <div class="cust-stat-card">
+                  <div class="stat-label">Lifetime Value</div>
+                  <div class="stat-val" id="cust-360-ltv">$0.00</div>
+                </div>
+                <div class="cust-stat-card">
+                  <div class="stat-label">Total Orders</div>
+                  <div class="stat-val" id="cust-360-orders">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="pane-section-title">Customer Orders in Database</div>
+            <div id="cust-360-orders-list" style="display:flex; flex-direction:column; gap:0.5rem;">
+              <div style="font-size:0.8rem; color:var(--text-muted);">No orders loaded.</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="pane-section-title">Rule Diagnostics</div>
+            <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:0.85rem; font-family:var(--font-mono); font-size:0.75rem;" id="cust-360-diagnostics">
+              No active rule evaluation
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- SUBVIEW B: RULE STUDIO -->
+    <div id="sub-rules" class="dash-subview">
+      <div class="studio-container">
+        <div class="studio-header">
+          <div>
+            <h2>Deterministic Decision Rules</h2>
+            <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.25rem;">
+              If Condition → Query Database → Answer That.
+            </p>
+          </div>
+          <button class="btn btn-primary" onclick="app.openNewRuleModal()">+ Add New Rule</button>
+        </div>
+
+        <div class="rule-table-wrap">
+          <table class="rule-table">
+            <thead>
+              <tr>
+                <th style="width:60px;">Active</th>
+                <th>Rule Name & Intent</th>
+                <th>Triggers / Keywords</th>
+                <th>Database Action</th>
+                <th>Response Template</th>
+                <th style="width:100px; text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="rules-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBVIEW C: STORE DATABASE -->
+    <div id="sub-database" class="dash-subview">
+      <div class="studio-container">
+        <div class="studio-header">
+          <div>
+            <h2>Store Database Explorer</h2>
+            <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.25rem;">
+              Live orders and catalog records synced from your connected store.
+            </p>
+          </div>
+          <button class="btn btn-secondary" onclick="app.openAddOrderModal()">+ Add Mock Order</button>
+        </div>
+
+        <div class="db-tabs">
+          <button class="db-tab-btn active" onclick="app.switchDbTab('orders', this)">Orders (<span id="count-orders">0</span>)</button>
+          <button class="db-tab-btn" onclick="app.switchDbTab('products', this)">Products (<span id="count-products">0</span>)</button>
+          <button class="db-tab-btn" onclick="app.switchDbTab('customers', this)">Customers (<span id="count-customers">0</span>)</button>
+          <button class="db-tab-btn" onclick="app.switchDbTab('promotions', this)">Promotions (<span id="count-promotions">0</span>)</button>
+        </div>
+
+        <div class="rule-table-wrap">
+          <table class="rule-table" id="db-active-table">
+            <!-- Dynamically populated -->
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBVIEW D: EMBED & CONNECTORS -->
+    <div id="sub-connectors" class="dash-subview">
+      <div class="studio-container">
+        <div class="studio-header">
+          <div>
+            <h2>Connect Your Storefront</h2>
+            <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.25rem;">
+              Connect this bot to Shopify, WordPress, or your custom website with zero coding.
+            </p>
+          </div>
+        </div>
+
+        <div class="integration-grid">
+          <div class="integration-card">
+            <div style="font-weight:700; font-size:1.05rem; margin-bottom:0.5rem;">🛍️ Shopify Storefront</div>
+            <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:1rem;">Paste inside <code>theme.liquid</code> before <code>&lt;/body&gt;</code>:</p>
+            <div class="code-box">&lt;script src="http://localhost:3000/widget.js"
+  data-server="http://localhost:3000"
+  data-source="Shopify"
+  async&gt;&lt;/script&gt;</div>
+            <button class="btn btn-secondary btn-sm" onclick="app.simulateShopifyWebhook()">Simulate Order Webhook</button>
+          </div>
+
+          <div class="integration-card">
+            <div style="font-weight:700; font-size:1.05rem; margin-bottom:0.5rem;">🌐 WordPress / WooCommerce</div>
+            <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:1rem;">Add to child theme <code>functions.php</code>:</p>
+            <div class="code-box">add_action('wp_footer', function() {
+  echo '&lt;script src="http://localhost:3000/widget.js" 
+         data-server="http://localhost:3000" 
+         data-source="WordPress"&gt;&lt;/script&gt;';
+});</div>
+            <button class="btn btn-secondary btn-sm" onclick="app.simulateWooCommerceWebhook()">Simulate WC Webhook</button>
+          </div>
+
+          <div class="integration-card">
+            <div style="font-weight:700; font-size:1.05rem; margin-bottom:0.5rem;">💻 Custom Website Embed</div>
+            <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:1rem;">Universal async script tag:</p>
+            <div class="code-box">&lt;script src="http://localhost:3000/widget.js" 
+  data-server="http://localhost:3000" 
+  data-theme="black" 
+  async&gt;&lt;/script&gt;</div>
+            <a href="/demo-store.html" target="_blank" class="btn btn-secondary btn-sm">Preview Store Demo ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       PAGE 4: ANIMATED STAR WIZARD (When user clicks "+ New Bot")
+       "beautiful animation of star say hi and start asking how the bot u want etc"
+       ====================================================================== -->
+  <div class="star-wizard-overlay" id="modal-star-wizard">
+    <div class="star-wizard-box">
+      <!-- Close button -->
+      <button style="position:absolute; top:1.25rem; right:1.25rem; background:none; border:none; color:var(--text-muted); font-size:1.3rem; cursor:pointer;" onclick="app.closeStarWizard()">✕</button>
+
+      <!-- Animated Star Mascot -->
+      <div class="star-mascot-wrap">
+        <svg class="star-svg" viewBox="0 0 100 100">
+          <defs>
+            <radialGradient id="starGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#fef08a" />
+              <stop offset="50%" stop-color="#f59e0b" />
+              <stop offset="100%" stop-color="#d97706" />
+            </radialGradient>
+          </defs>
+          <!-- 5-Point Star Body -->
+          <polygon points="50,5 64,36 98,36 70,57 81,91 50,70 19,91 30,57 2,36 36,36" fill="url(#starGlow)" stroke="#fef08a" stroke-width="2"/>
+          <!-- Smiling Eyes -->
+          <circle cx="42" cy="45" r="3.5" fill="#000" />
+          <circle cx="58" cy="45" r="3.5" fill="#000" />
+          <!-- Blushing cheeks -->
+          <circle cx="36" cy="51" r="3" fill="#f43f5e" opacity="0.6" />
+          <circle cx="64" cy="51" r="3" fill="#f43f5e" opacity="0.6" />
+          <!-- Cheerful Smile -->
+          <path d="M44 52 Q50 58 56 52" stroke="#000" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <!-- Star Speech Bubble -->
+      <div class="star-speech-bubble" id="star-speech-text">
+        Hi there! ✨ I'm your RuleMind Architect. Let's create your new custom bot together!
+      </div>
+
+      <!-- Step 1: Store Type -->
+      <div class="wizard-step active" id="star-step-1">
+        <div style="font-weight:700; font-size:1.1rem; color:#fff; margin-bottom:0.4rem;">
+          What type of store or website is this bot for?
+        </div>
+        <div style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1.25rem;">
+          Select your platform so we can configure the appropriate database connector:
+        </div>
+
+        <div class="store-option-grid">
+          <div class="store-option-card selected" onclick="app.selectWizardPlatform('Shopify Storefront', this)">
+            <div class="store-option-icon">🛍️</div>
+            <div style="font-weight:700; font-size:0.95rem;">Shopify</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Orders, stock & tags</div>
+          </div>
+
+          <div class="store-option-card" onclick="app.selectWizardPlatform('WordPress / WooCommerce', this)">
+            <div class="store-option-icon">🌐</div>
+            <div style="font-weight:700; font-size:0.95rem;">WooCommerce</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">REST API & webhooks</div>
+          </div>
+
+          <div class="store-option-card" onclick="app.selectWizardPlatform('Custom Website', this)">
+            <div class="store-option-icon">💻</div>
+            <div style="font-weight:700; font-size:0.95rem;">Custom Web</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">React, Vue, HTML5</div>
+          </div>
+        </div>
+
+        <div style="margin-top:2rem; display:flex; justify-content:flex-end;">
+          <button class="btn-pill btn-pill-primary" onclick="app.nextWizardStep(2)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Bot Name -->
+      <div class="wizard-step" id="star-step-2">
+        <div style="font-weight:700; font-size:1.1rem; color:#fff; margin-bottom:0.4rem;">
+          What would you like to name your new bot?
+        </div>
+        <div style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1.5rem;">
+          This will be shown in the chat window header to your shoppers:
+        </div>
+
+        <input type="text" id="wizard-bot-name" class="auth-input" value="Apex Minimalist Support" placeholder="e.g. Urban Gear Assistant">
+
+        <div style="margin-top:2rem; display:flex; justify-content:space-between;">
+          <button class="btn-pill btn-pill-secondary" onclick="app.prevWizardStep(1)">← Back</button>
+          <button class="btn-pill btn-pill-primary" onclick="app.nextWizardStep(3)">Next: Choose Rules →</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Rules & DB Actions -->
+      <div class="wizard-step" id="star-step-3">
+        <div style="font-weight:700; font-size:1.1rem; color:#fff; margin-bottom:0.4rem;">
+          Which automated rules should this bot execute?
+        </div>
+        <div style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1.25rem;">
+          Select the database checks you want enabled for this bot:
+        </div>
+
+        <div class="wizard-rules-list">
+          <label class="wizard-rule-check">
+            <input type="checkbox" checked value="rule-order-track">
+            <div>
+              <div style="font-weight:600; font-size:0.9rem;">📦 Real-Time Order Tracking</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Checks database for order #, carrier, and fulfillment delivery ETA</div>
+            </div>
+          </label>
+
+          <label class="wizard-rule-check">
+            <input type="checkbox" checked value="rule-product-stock">
+            <div>
+              <div style="font-weight:600; font-size:0.9rem;">🏷️ Live Product Stock & Inventory</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Queries catalog database to check exact units remaining in stock</div>
+            </div>
+          </label>
+
+          <label class="wizard-rule-check">
+            <input type="checkbox" checked value="rule-return-refund">
+            <div>
+              <div style="font-weight:600; font-size:0.9rem;">🔄 30-Day Returns & Exchange Policy</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Provides conditions and allows initiating instant return with order ID</div>
+            </div>
+          </label>
+
+          <label class="wizard-rule-check">
+            <input type="checkbox" checked value="rule-discounts">
+            <div>
+              <div style="font-weight:600; font-size:0.9rem;">🎉 Active Discount Vouchers</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Validates promo codes from the active promotions table</div>
+            </div>
+          </label>
+
+          <label class="wizard-rule-check">
+            <input type="checkbox" checked value="rule-human-escalate">
+            <div>
+              <div style="font-weight:600; font-size:0.9rem;">👨‍💼 Live Human Agent Takeover</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Notifies your team inbox when a customer requests a real person</div>
+            </div>
+          </label>
+        </div>
+
+        <div style="margin-top:2rem; display:flex; justify-content:space-between;">
+          <button class="btn-pill btn-pill-secondary" onclick="app.prevWizardStep(2)">← Back</button>
+          <button class="btn-pill btn-pill-primary" onclick="app.finishCreateBot()">✨ Create My Bot!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Embed Standalone Chat Widget -->
+  <script src="/widget.js" data-server="http://localhost:3000" data-theme="black"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
