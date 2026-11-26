@@ -11,10 +11,13 @@ const app = {
 
   // Wizard state
   wizardData: {
-    platform: 'Shopify Storefront',
+    botType: 'E-Commerce Customer Support',
+    platform: 'Shopify',
     botName: 'Apex Minimalist Support',
-    rules: []
+    rules: ['rule-order-track', 'rule-product-stock', 'rule-return-refund', 'rule-discounts', 'rule-human-escalate']
   },
+
+  activeApiLang: 'curl',
 
   init() {
     this.checkAuth();
@@ -136,7 +139,7 @@ const app = {
     document.getElementById('view-homepage').style.display = 'none';
     document.getElementById('view-dashboard').classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    this.loadConversations();
+    this.showBotsStack();
   },
 
   scrollToSection(id) {
@@ -148,59 +151,549 @@ const app = {
   },
 
   // -------------------------------------------------------------
-  // DASHBOARD & MULTI-BOT LOGIC
+  // STACK OF BOTS & BOT DETAIL MANAGEMENT
   // -------------------------------------------------------------
+  currentDetailBotId: null,
+  activeBotDetailTab: 'unanswered',
+
   async loadBots() {
     try {
       const res = await fetch('/api/bots');
       const data = await res.json();
       this.bots = data.bots || [];
-      this.renderBotDropdown();
+      this.renderBotsStack();
+      this.updateBotsCountBadge();
+    } catch (e) {
+      console.error('Error loading bots:', e);
+    }
+  },
+
+  updateBotsCountBadge() {
+    const badge = document.getElementById('dash-bots-count-badge');
+    if (badge) {
+      const count = this.bots.length;
+      badge.textContent = `● ${count} ${count === 1 ? 'Bot' : 'Bots'} Active`;
+    }
+  },
+
+  showBotsStack() {
+    this.currentDetailBotId = null;
+    const stackView = document.getElementById('view-bots-stack');
+    const detailView = document.getElementById('view-bot-detail');
+    if (stackView) stackView.style.display = 'block';
+    if (detailView) detailView.style.display = 'none';
+    this.loadBots();
+  },
+
+  renderBotsStack() {
+    const grid = document.getElementById('bots-stack-grid');
+    if (!grid) return;
+
+    if (!this.bots || this.bots.length === 0) {
+      grid.innerHTML = `
+        <div class="bot-empty-state">
+          <div style="font-size:3.5rem; margin-bottom:1rem;">🤖</div>
+          <h2 style="font-size:1.8rem; font-weight:800; color:#fff; margin-bottom:0.75rem;">No Bots Created Yet</h2>
+          <p style="color:var(--text-secondary); max-width:480px; margin:0 auto 2rem; font-size:0.95rem; line-height:1.6;">
+            Create your first zero-AI deterministic bot. It connects directly to Shopify, WooCommerce, or your custom store database.
+          </p>
+          <button class="btn-new-bot-glow" style="margin:0 auto;" onclick="app.launchStarWizard()">
+            <span>✨</span>
+            <span>+ Create New Bot</span>
+          </button>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = this.bots.map(b => {
+      const qaCount = (b.custom_qa && b.custom_qa.length) || 0;
+      const unansCount = (b.unanswered_questions && b.unanswered_questions.filter(q => q.status !== 'resolved').length) || 0;
+      const restockCount = (b.restock_requests && b.restock_requests.length) || 0;
+
+      let platformIcon = '💻';
+      if ((b.store_type || '').includes('Shopify')) platformIcon = '🛍️';
+      else if ((b.store_type || '').includes('WordPress')) platformIcon = '🌐';
+
+      return `
+        <div class="bot-stack-card" onclick="app.openBotDetail('${b.id}')">
+          <div>
+            <div class="bot-stack-card-top">
+              <div class="bot-stack-name">${this.escapeHtml(b.name)}</div>
+              <span class="bot-platform-badge">${platformIcon} ${this.escapeHtml(b.store_type || 'Custom Web')}</span>
+            </div>
+
+            <div class="bot-stack-purpose">
+              ${this.escapeHtml(b.purpose || 'Order Tracking, Stock Check & Customer Service')}
+            </div>
+
+            <div class="bot-metrics-row">
+              <div class="bot-metric-chip">
+                <span>💬</span>
+                <span><strong>${qaCount}</strong> Q&A Pairs</span>
+              </div>
+              <div class="bot-metric-chip ${unansCount > 0 ? 'alert' : ''}">
+                <span>❓</span>
+                <span><strong>${unansCount}</strong> Unanswered</span>
+              </div>
+              <div class="bot-metric-chip">
+                <span>📦</span>
+                <span><strong>${restockCount}</strong> Restock Reqs</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bot-stack-card-footer">
+            <div class="bot-status-pill">
+              <span class="bot-status-dot"></span>
+              <span>🟢 Connected & Active</span>
+            </div>
+            <button class="bot-open-btn" onclick="event.stopPropagation(); app.openBotDetail('${b.id}')">
+              <span>Open Studio</span>
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  },
+
+  async openBotDetail(botId) {
+    this.currentDetailBotId = botId;
+    this.activeBotId = botId;
+    const stackView = document.getElementById('view-bots-stack');
+    const detailView = document.getElementById('view-bot-detail');
+
+    if (stackView) stackView.style.display = 'none';
+    if (detailView) detailView.style.display = 'block';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    await this.loadBotDetail(botId);
+  },
+
+  async loadBotDetail(botId) {
+    try {
+      const res = await fetch(`/api/bots/${botId}`);
+      const data = await res.json();
+      if (!data.success || !data.bot) {
+        alert('Bot details could not be loaded.');
+        return;
+      }
+
+      const bot = data.bot;
+      // Update header details
+      const nameEl = document.getElementById('detail-bot-name');
+      const badgeEl = document.getElementById('detail-bot-platform-badge');
+      const purposeEl = document.getElementById('detail-bot-purpose');
+
+      if (nameEl) nameEl.textContent = bot.name;
+      if (badgeEl) {
+        let icon = '💻';
+        if ((bot.store_type || '').includes('Shopify')) icon = '🛍️';
+        else if ((bot.store_type || '').includes('WordPress')) icon = '🌐';
+        badgeEl.textContent = `${icon} ${bot.store_type || 'Custom Website'}`;
+      }
+      if (purposeEl) purposeEl.textContent = `Purpose: ${bot.purpose || 'Order Tracking, Stock Check & Customer Service'}`;
+
+      // Update Tab Badges
+      const unansCount = (bot.unanswered_questions || []).filter(q => q.status !== 'resolved').length;
+      const qaCount = (bot.custom_qa || []).length;
+      const restockCount = (bot.restock_requests || []).length;
+
+      const bUnans = document.getElementById('badge-unanswered-count');
+      const bQa = document.getElementById('badge-qa-count');
+      const bRestock = document.getElementById('badge-restock-count');
+
+      if (bUnans) bUnans.textContent = unansCount;
+      if (bQa) bQa.textContent = qaCount;
+      if (bRestock) bRestock.textContent = restockCount;
+
+      // Render Tab Contents
+      this.renderUnansweredList(bot);
+      this.renderQAList(bot);
+      this.renderRestockTable(bot);
+      this.renderIntegrationGuide(bot);
+
+    } catch (e) {
+      console.error('Error fetching bot details:', e);
+    }
+  },
+
+  switchBotDetailTab(tabName) {
+    this.activeBotDetailTab = tabName;
+    const tabs = ['unanswered', 'qa', 'restock', 'integration'];
+    tabs.forEach(t => {
+      const btn = document.getElementById(`tab-btn-${t}`);
+      const pane = document.getElementById(`pane-${t}`);
+      if (btn) btn.classList.toggle('active', t === tabName);
+      if (pane) pane.classList.toggle('active', t === tabName);
+    });
+  },
+
+  // 1. Unanswered Questions Renderer
+  renderUnansweredList(bot) {
+    const container = document.getElementById('detail-unanswered-list');
+    if (!container) return;
+
+    const list = bot.unanswered_questions || [];
+    if (list.length === 0) {
+      container.innerHTML = `
+        <div style="background:#09090d; border:1px dashed #232332; border-radius:var(--radius-md); padding:3.5rem 2rem; text-align:center;">
+          <div style="font-size:2.2rem; margin-bottom:0.75rem;">🎉</div>
+          <div style="font-weight:700; color:#fff; font-size:1.1rem; margin-bottom:0.25rem;">No Unanswered Questions!</div>
+          <div style="font-size:0.85rem; color:var(--text-muted); max-width:400px; margin:0 auto;">
+            Your bot is answering every shopper query with precision rules and database records. When a customer asks a question without an answer, it will appear here.
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = list.map(q => {
+      const isResolved = q.status === 'resolved';
+      const timeStr = q.timestamp ? new Date(q.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recently';
+
+      return `
+        <div class="unanswered-item-card ${isResolved ? 'resolved' : ''}">
+          <div class="unanswered-header">
+            <div style="display:flex; align-items:center; gap:0.6rem;">
+              <span style="font-size:0.82rem; font-weight:600; color:#fff;">👤 ${this.escapeHtml(q.customer || 'Guest Shopper')}</span>
+              <span style="font-size:0.75rem; color:var(--text-muted);">• ${timeStr}</span>
+            </div>
+            <div>
+              ${isResolved 
+                ? '<span class="brand-badge" style="color:var(--accent-green); background:#062615;">✓ Answer Added to Bot</span>' 
+                : '<span class="brand-badge" style="color:#fb7185; background:#2c0c14; border-color:#5c1824;">● Awaiting Answer</span>'}
+            </div>
+          </div>
+
+          <div class="unanswered-question-box">
+            "${this.escapeHtml(q.question)}"
+          </div>
+
+          ${!isResolved ? `
+            <div class="unanswered-answer-form">
+              <input type="text" id="answer-input-${q.id}" class="auth-input" style="flex:1;" placeholder="Type the answer your bot should give for this question...">
+              <button class="btn-pill btn-pill-primary" style="font-size:0.8rem; white-space:nowrap;" onclick="app.resolveUnanswered('${q.id}')">
+                ✨ Save Answer to Bot
+              </button>
+            </div>
+          ` : `
+            <div style="font-size:0.78rem; color:var(--text-muted);">
+              This question has been answered and added to the bot's permanent Custom Q&A database.
+            </div>
+          `}
+        </div>
+      `;
+    }).join('');
+  },
+
+  async resolveUnanswered(qId) {
+    const input = document.getElementById(`answer-input-${qId}`);
+    const answer = input ? input.value.trim() : '';
+    if (!answer) {
+      alert('Please enter an answer to teach the bot.');
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/bots/${this.currentDetailBotId}/unanswered/${qId}/resolve`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ answer })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert('✨ Success! The answer has been saved and your bot will now answer this question automatically!');
+        this.loadBotDetail(this.currentDetailBotId);
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Error saving answer.');
+    }
+  },
+
+  // 2. Q&A Manager Renderer
+  renderQAList(bot) {
+    const container = document.getElementById('detail-qa-list');
+    if (!container) return;
+
+    const list = bot.custom_qa || [];
+    if (list.length === 0) {
+      container.innerHTML = `
+        <div style="background:#09090d; border:1px dashed #232332; border-radius:var(--radius-md); padding:3.5rem 2rem; text-align:center;">
+          <div style="font-size:2.2rem; margin-bottom:0.75rem;">💬</div>
+          <div style="font-weight:700; color:#fff; font-size:1.1rem; margin-bottom:0.25rem;">No Custom Q&A Pairs Added Yet</div>
+          <div style="font-size:0.85rem; color:var(--text-muted); max-width:400px; margin:0 auto 1.5rem;">
+            Add store-specific answers to FAQs (e.g. shipping zones, warranty, materials) so your bot can answer instantly.
+          </div>
+          <button class="btn-pill btn-pill-primary" style="font-size:0.82rem;" onclick="app.toggleAddQAForm(true)">
+            + Add First Question & Answer
+          </button>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = list.map(qa => `
+      <div class="qa-card-item">
+        <div style="flex:1;">
+          <div class="qa-question-text">Q: ${this.escapeHtml(qa.question)}</div>
+          <div class="qa-answer-text">A: ${this.escapeHtml(qa.answer)}</div>
+        </div>
+        <button class="btn-pill btn-pill-secondary" style="font-size:0.75rem; border-color:#381c22; color:#f87171;" onclick="app.deleteQA('${qa.id}')">
+          ✕ Delete
+        </button>
+      </div>
+    `).join('');
+  },
+
+  toggleAddQAForm(show) {
+    const form = document.getElementById('form-add-qa');
+    if (!form) return;
+    if (show === undefined) {
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    } else {
+      form.style.display = show ? 'block' : 'none';
+    }
+    if (form.style.display === 'block') {
+      const qInput = document.getElementById('input-new-question');
+      if (qInput) qInput.focus();
+    }
+  },
+
+  async saveNewQA() {
+    const qInput = document.getElementById('input-new-question');
+    const aInput = document.getElementById('input-new-answer');
+    const question = qInput ? qInput.value.trim() : '';
+    const answer = aInput ? aInput.value.trim() : '';
+
+    if (!question || !answer) {
+      alert('Please enter both a question and an answer.');
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/bots/${this.currentDetailBotId}/qa`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question, answer })
+      });
+      const data = await res.json();
+      if (data.success) {
+        if (qInput) qInput.value = '';
+        if (aInput) aInput.value = '';
+        this.toggleAddQAForm(false);
+        this.loadBotDetail(this.currentDetailBotId);
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Error saving Q&A.');
+    }
+  },
+
+  async deleteQA(qaId) {
+    if (!confirm('Are you sure you want to remove this Q&A from this bot?')) return;
+    try {
+      await fetch(`/api/bots/${this.currentDetailBotId}/qa/${qaId}`, { method: 'DELETE' });
+      this.loadBotDetail(this.currentDetailBotId);
     } catch (e) {
       console.error(e);
     }
   },
 
-  renderBotDropdown() {
-    const select = document.getElementById('dash-bot-select');
-    if (!select) return;
+  // 3. Restock Requests Renderer
+  renderRestockTable(bot) {
+    const tbody = document.getElementById('detail-restock-tbody');
+    if (!tbody) return;
 
-    select.innerHTML = this.bots.map(b => `
-      <option value="${b.id}" ${b.id === this.activeBotId ? 'selected' : ''}>
-        ${this.escapeHtml(b.name)}
-      </option>
-    `).join('');
+    const list = bot.restock_requests || [];
+    if (list.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align:center; padding:3rem; color:var(--text-muted);">
+            No restock requests yet. When customers query out-of-stock items, the bot registers their inquiry here.
+          </td>
+        </tr>
+      `;
+      return;
+    }
 
-    const currentBot = this.bots.find(b => b.id === this.activeBotId) || this.bots[0];
-    if (currentBot) {
-      document.getElementById('dash-bot-platform-badge').textContent = currentBot.store_type || 'Shopify Storefront';
-      if (currentBot.stats) {
-        document.getElementById('kpi-chats').textContent = currentBot.stats.total_chats;
-        document.getElementById('kpi-queries').textContent = currentBot.stats.db_queries;
-        document.getElementById('kpi-handoffs').textContent = currentBot.stats.human_handoffs;
-      }
+    tbody.innerHTML = list.map(r => {
+      const timeStr = r.requested_at ? new Date(r.requested_at).toLocaleDateString() : 'Today';
+      return `
+        <tr>
+          <td>
+            <div style="font-weight:700; color:#fff;">${this.escapeHtml(r.product_title || r.sku)}</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);">SKU: ${this.escapeHtml(r.sku)}</div>
+          </td>
+          <td>${this.escapeHtml(r.customer_email || 'guest@store.com')}</td>
+          <td>
+            <span class="brand-badge" style="background:#1d1836; color:#c084fc; border-color:#3b2d6b;">
+              🔥 ${r.count || 1} Shoppers
+            </span>
+          </td>
+          <td style="font-size:0.8rem; color:var(--text-secondary);">${timeStr}</td>
+          <td>
+            <span class="brand-badge" style="background:#2e1017; color:#fb7185; border-color:#5c1c28;">
+              Out of Stock
+            </span>
+          </td>
+          <td>
+            <button class="btn-pill btn-pill-secondary" style="font-size:0.75rem;" onclick="alert('Notification alert sent to inventory manager for ${this.escapeHtml(r.product_title)}!')">
+              Notify Warehouse
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  // 4. Platform Integration Guide Renderer
+  renderIntegrationGuide(bot) {
+    const container = document.getElementById('detail-integration-content');
+    if (!container) return;
+
+    const isShopify = (bot.store_type || '').includes('Shopify');
+    const isWp = (bot.store_type || '').includes('WordPress');
+
+    if (isShopify) {
+      container.innerHTML = `
+        <div style="background:#09090d; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:1.75rem; margin-bottom:1.5rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+            <div style="font-weight:700; font-size:1rem; color:#fff;">🛍️ Shopify theme.liquid Integration</div>
+            <span class="brand-badge">🟢 Webhooks & Inventory Sync Active</span>
+          </div>
+
+          <p style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6; margin-bottom:1.25rem;">
+            Your bot is linked to your Shopify Storefront. It automatically checks inventory levels, verifies customer order numbers, and tracks live FedEx/DHL shipments.
+          </p>
+
+          <div class="code-header-bar">
+            <span>Shopify theme.liquid snippet</span>
+            <button class="btn-copy-mini" onclick="app.copyCode('detail-shopify-code')">Copy Snippet</button>
+          </div>
+          <div class="code-box" id="detail-shopify-code" style="margin-top:0;">&lt;!-- RuleMind Bot Integration for ${this.escapeHtml(bot.name)} --&gt;
+&lt;script src="http://localhost:3000/widget.js"
+  data-server="http://localhost:3000"
+  data-bot-id="${bot.id}"
+  data-source="Shopify Storefront"
+  data-customer-email="{{ customer.email }}"
+  data-customer-name="{{ customer.name }}"
+  async&gt;&lt;/script&gt;</div>
+
+          <div style="margin-top:1.25rem; font-size:0.82rem; color:var(--text-secondary);">
+            <strong>Database Hooks:</strong> Order events sync via <code>http://localhost:3000/api/integrations/shopify/webhook</code>.
+          </div>
+        </div>
+      `;
+    } else if (isWp) {
+      container.innerHTML = `
+        <div style="background:#09090d; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:1.75rem; margin-bottom:1.5rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+            <div style="font-weight:700; font-size:1rem; color:#fff;">🌐 WordPress / WooCommerce Integration</div>
+            <span class="brand-badge">🟢 WooCommerce Webhook Sync Active</span>
+          </div>
+
+          <p style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6; margin-bottom:1.25rem;">
+            Your bot is connected to WooCommerce. It executes direct SQL/REST lookups against orders, stock levels, and promotional discount codes.
+          </p>
+
+          <div class="code-header-bar">
+            <span>functions.php snippet</span>
+            <button class="btn-copy-mini" onclick="app.copyCode('detail-wp-code')">Copy PHP Snippet</button>
+          </div>
+          <div class="code-box" id="detail-wp-code" style="margin-top:0;">// RuleMind Bot Integration for ${this.escapeHtml(bot.name)}
+add_action('wp_footer', function() {
+  ?&gt;
+  &lt;script src="http://localhost:3000/widget.js" 
+          data-server="http://localhost:3000" 
+          data-bot-id="${bot.id}"
+          data-source="WordPress / WooCommerce"&gt;&lt;/script&gt;
+  &lt;?php
+});</div>
+        </div>
+      `;
+    } else {
+      const dbConfig = bot.db_config || {};
+      container.innerHTML = `
+        <div style="background:#09090d; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:1.75rem; margin-bottom:1.5rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+            <div style="font-weight:700; font-size:1rem; color:#fff;">💻 Custom Website & Database Access</div>
+            <span class="brand-badge">🟢 Direct DB Queries Enabled</span>
+          </div>
+
+          <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem; margin-bottom:1.5rem;">
+            <div style="background:#050508; border:1px solid #1a1a24; border-radius:6px; padding:0.85rem;">
+              <div style="font-size:0.75rem; color:var(--text-muted);">Database Type</div>
+              <div style="font-weight:700; color:#fff; font-size:0.9rem; margin-top:2px;">${this.escapeHtml(dbConfig.db_type || 'Custom PostgreSQL / MySQL')}</div>
+            </div>
+            <div style="background:#050508; border:1px solid #1a1a24; border-radius:6px; padding:0.85rem;">
+              <div style="font-size:0.75rem; color:var(--text-muted);">API Endpoint</div>
+              <div style="font-weight:700; color:#fff; font-size:0.9rem; margin-top:2px;">${this.escapeHtml(dbConfig.endpoint || 'http://localhost:3000/api/database')}</div>
+            </div>
+            <div style="background:#050508; border:1px solid #1a1a24; border-radius:6px; padding:0.85rem;">
+              <div style="font-size:0.75rem; color:var(--text-muted);">Access Token</div>
+              <div style="font-weight:700; color:#fff; font-size:0.9rem; margin-top:2px; font-family:var(--font-mono);">${this.escapeHtml(dbConfig.api_key || 'rm_live_key_default')}</div>
+            </div>
+          </div>
+
+          <div class="code-header-bar">
+            <span>HTML Embed Tag</span>
+            <button class="btn-copy-mini" onclick="app.copyCode('detail-custom-code')">Copy Script</button>
+          </div>
+          <div class="code-box" id="detail-custom-code" style="margin-top:0;">&lt;script src="http://localhost:3000/widget.js" 
+        data-server="http://localhost:3000" 
+        data-bot-id="${bot.id}" 
+        data-theme="black" 
+        async&gt;&lt;/script&gt;</div>
+        </div>
+      `;
     }
   },
 
-  switchActiveBot(botId) {
-    this.activeBotId = botId;
-    this.renderBotDropdown();
+  async verifyBotDb(botId) {
+    try {
+      const res = await fetch(`/api/bots/${botId}/verify-db`, { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        const titleEl = document.getElementById('verify-banner-title');
+        const subEl = document.getElementById('verify-banner-sub');
+        const stampEl = document.getElementById('verify-banner-stamp');
+
+        if (titleEl) titleEl.textContent = '🟢 Database Verified & Fully Accessible';
+        if (subEl) subEl.textContent = `Direct query test passed: ${data.details.products_accessible} products, ${data.details.orders_accessible} orders accessible in ${data.details.latency_ms}ms with 0% AI hallucinations!`;
+        if (stampEl) stampEl.textContent = `Verified: ${new Date().toLocaleTimeString()}`;
+        alert('⚡ Database Connection Verified! Deterministic rule engine is communicating live with your store data.');
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Error verifying database.');
+    }
   },
 
-  switchDashTab(subviewId, btn) {
-    this.currentDashTab = subviewId;
-    document.querySelectorAll('.dash-nav-btn').forEach(b => b.classList.remove('active'));
-    if (btn) btn.classList.add('active');
+  openWidgetForBot(botId) {
+    this.activeBotId = botId;
+    if (window.RuleMindWidget) {
+      if (window.RuleMindWidget.setBotId) window.RuleMindWidget.setBotId(botId);
+      if (window.RuleMindWidget.open) window.RuleMindWidget.open();
+    } else {
+      const widgetBtn = document.querySelector('.rm-launcher');
+      if (widgetBtn) widgetBtn.click();
+    }
+  },
 
-    document.querySelectorAll('.dash-subview').forEach(v => v.classList.remove('active'));
-    document.getElementById(subviewId).classList.add('active');
+  async deleteCurrentBot() {
+    if (!this.currentDetailBotId) return;
+    if (!confirm('Are you sure you want to delete this bot from your stack?')) return;
 
-    if (subviewId === 'sub-inbox') {
-      this.refreshInbox();
-    } else if (subviewId === 'sub-rules') {
-      this.loadRules();
-    } else if (subviewId === 'sub-database') {
-      this.loadDatabaseData();
+    try {
+      await fetch(`/api/bots/${this.currentDetailBotId}`, { method: 'DELETE' });
+      alert('Bot deleted successfully.');
+      this.showBotsStack();
+    } catch (e) {
+      console.error(e);
+      alert('Error deleting bot.');
     }
   },
 
@@ -209,7 +702,32 @@ const app = {
   // -------------------------------------------------------------
   launchStarWizard() {
     document.getElementById('modal-star-wizard').classList.add('active');
-    this.setStarSpeech("Hi there! ✨ I'm your RuleMind Architect. Let's create your new custom bot together!");
+    this.wizardData = {
+      botName: 'Apex Minimalist Assistant',
+      botPurpose: 'Order Tracking, Stock Check & Customer Service',
+      platform: 'Shopify',
+      customQA: [],
+      fallbackMessage: "I'm sorry, I don't have an exact answer for that yet. Would you like me to look up an order in our store database or connect you to our support specialist?",
+      dbConfig: {}
+    };
+
+    const nameInput = document.getElementById('wizard-bot-name');
+    const purposeInput = document.getElementById('wizard-bot-purpose');
+    const fallbackInput = document.getElementById('wizard-bot-fallback');
+
+    if (nameInput) nameInput.value = this.wizardData.botName;
+    if (purposeInput) purposeInput.value = this.wizardData.botPurpose;
+    if (fallbackInput) fallbackInput.value = this.wizardData.fallbackMessage;
+
+    // Initialize 2 default custom Q&A rows
+    const qaContainer = document.getElementById('wizard-qa-container');
+    if (qaContainer) {
+      qaContainer.innerHTML = '';
+      this.addWizardQARow('Do you ship internationally?', 'Yes! We ship worldwide via FedEx and DHL in 3-7 business days.');
+      this.addWizardQARow('What materials are used for the keycaps?', 'Our keycaps are crafted from thick double-shot PBT plastic with stealth dark legends.');
+    }
+
+    this.setStarSpeech("Hi there! ✨ I'm your RuleMind Architect. Let's create your new database-powered bot together! First, what is your bot's name and purpose?");
     this.showWizardStep(1);
   },
 
@@ -233,38 +751,255 @@ const app = {
     if (stepEl) stepEl.classList.add('active');
   },
 
+  selectWizardPurpose(purpose, el) {
+    this.wizardData.botPurpose = purpose;
+    const input = document.getElementById('wizard-bot-purpose');
+    if (input) input.value = purpose;
+    document.querySelectorAll('#star-step-1 .store-option-card').forEach(c => c.classList.remove('selected'));
+    if (el) el.classList.add('selected');
+  },
+
   selectWizardPlatform(platform, el) {
     this.wizardData.platform = platform;
-    document.querySelectorAll('.store-option-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('#star-step-2 .store-option-card').forEach(c => c.classList.remove('selected'));
     if (el) el.classList.add('selected');
+
+    const badge = document.getElementById('wizard-platform-badge');
+    if (badge) badge.textContent = platform;
+
+    this.updateWizardPlatformView();
+  },
+
+  addWizardQARow(q = '', a = '') {
+    const container = document.getElementById('wizard-qa-container');
+    if (!container) return;
+
+    const row = document.createElement('div');
+    row.className = 'wizard-qa-row';
+    row.innerHTML = `
+      <button type="button" class="btn-remove-qa" onclick="this.parentElement.remove()">✕</button>
+      <input type="text" class="auth-input input-qa-q" placeholder="Customer Question (e.g. Do you ship to Australia?)" value="${this.escapeHtml(q)}">
+      <input type="text" class="auth-input input-qa-a" placeholder="Exact Deterministic Bot Answer" value="${this.escapeHtml(a)}">
+    `;
+    container.appendChild(row);
+  },
+
+  updateWizardPlatformView() {
+    const isShopify = this.wizardData.platform === 'Shopify';
+    const isWp = this.wizardData.platform === 'WordPress';
+    const isCustom = this.wizardData.platform === 'Custom Web & API';
+
+    const pShopify = document.getElementById('wizard-panel-shopify');
+    const pWp = document.getElementById('wizard-panel-wordpress');
+    const pCustom = document.getElementById('wizard-panel-custom');
+
+    if (pShopify) pShopify.style.display = isShopify ? 'block' : 'none';
+    if (pWp) pWp.style.display = isWp ? 'block' : 'none';
+    if (pCustom) pCustom.style.display = isCustom ? 'block' : 'none';
+
+    const titleEl = document.getElementById('wizard-instructions-title');
+    const subEl = document.getElementById('wizard-instructions-sub');
+    if (isShopify) {
+      if (titleEl) titleEl.textContent = 'How to Plug Your Bot into Shopify';
+      if (subEl) subEl.textContent = 'Step-by-step instructions to embed your bot in theme.liquid and sync orders & inventory:';
+    } else if (isWp) {
+      if (titleEl) titleEl.textContent = 'How to Plug Your Bot into WordPress / WooCommerce';
+      if (subEl) subEl.textContent = 'Step-by-step instructions to add your bot to functions.php and sync WooCommerce:';
+    } else {
+      if (titleEl) titleEl.textContent = 'How to Plug Into Custom Website & Database REST API';
+      if (subEl) subEl.textContent = 'Database credentials form, HTML embed tag, and full REST API access:';
+    }
   },
 
   nextWizardStep(stepNum) {
     if (stepNum === 2) {
-      this.setStarSpeech(`Great choice! 🛍️ What should we name your new ${this.wizardData.platform} bot?`);
-    } else if (stepNum === 3) {
       const nameInput = document.getElementById('wizard-bot-name');
-      this.wizardData.botName = nameInput ? nameInput.value.trim() : 'Apex Support';
-      this.setStarSpeech(`Love that name! ✨ Now tell me, which database rules and features should this bot have?`);
+      const purposeInput = document.getElementById('wizard-bot-purpose');
+      this.wizardData.botName = (nameInput && nameInput.value.trim()) || 'Apex Assistant';
+      this.wizardData.botPurpose = (purposeInput && purposeInput.value.trim()) || 'Order Tracking & Support';
+      this.setStarSpeech(`Great choice! 🛍️ Which platform do you want to plug "${this.wizardData.botName}" into?`);
+    } else if (stepNum === 3) {
+      this.setStarSpeech(`Let's teach "${this.wizardData.botName}" some extra questions and exact answers for your shoppers!`);
+    } else if (stepNum === 4) {
+      // Gather Q&As
+      this.wizardData.customQA = [];
+      document.querySelectorAll('#wizard-qa-container .wizard-qa-row').forEach(row => {
+        const q = row.querySelector('.input-qa-q').value.trim();
+        const a = row.querySelector('.input-qa-a').value.trim();
+        if (q && a) {
+          this.wizardData.customQA.push({ question: q, answer: a });
+        }
+      });
+      this.setStarSpeech(`Now decide: what should "${this.wizardData.botName}" display when a shopper asks a question it doesn't know?`);
+    } else if (stepNum === 5) {
+      const fbInput = document.getElementById('wizard-bot-fallback');
+      this.wizardData.fallbackMessage = (fbInput && fbInput.value.trim()) || "I'm sorry, I don't have an exact answer for that yet.";
+      this.updateWizardPlatformView();
+      this.setStarSpeech(`Here is your step-by-step guide to plug "${this.wizardData.botName}" into ${this.wizardData.platform}!`);
     }
     this.showWizardStep(stepNum);
   },
 
   prevWizardStep(stepNum) {
     if (stepNum === 1) {
-      this.setStarSpeech("Let's pick your store platform first! 🛍️");
+      this.setStarSpeech("Step 1: Decide the name and purpose of your bot. ✨");
     } else if (stepNum === 2) {
-      this.setStarSpeech("You can adjust the bot name here! ✏️");
+      this.setStarSpeech(`Which website platform do you want to integrate with? 🔌`);
+    } else if (stepNum === 3) {
+      this.setStarSpeech("Teach your bot extra questions and answers for your store! 💬");
+    } else if (stepNum === 4) {
+      this.setStarSpeech("What should your bot say when an answer is not known? ❓");
     }
     this.showWizardStep(stepNum);
   },
 
   async finishCreateBot() {
-    this.setStarSpeech("Woohoo! 🚀 Creating your custom bot and linking it to your store database...");
+    this.setStarSpeech(`Woohoo! 🚀 Creating "${this.wizardData.botName}" with deterministic database connectivity...`);
 
-    const activeRules = [];
-    document.querySelectorAll('.wizard-rule-check input:checked').forEach(c => activeRules.push(c.value));
-    this.wizardData.rules = activeRules;
+    // Extract DB config if custom website
+    let dbConfig = null;
+    if (this.wizardData.platform === 'Custom Web & API') {
+      const dbType = document.getElementById('wizard-db-type')?.value || 'PostgreSQL';
+      const dbEndpoint = document.getElementById('wizard-db-endpoint')?.value || 'http://localhost:3000/api/database';
+      const dbKey = document.getElementById('wizard-db-key')?.value || 'rm_live_key';
+      dbConfig = { db_type: dbType, endpoint: dbEndpoint, api_key: dbKey, status: 'verified' };
+    }
+
+    try {
+      const res = await fetch('/api/bots', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: this.wizardData.botName,
+          store_type: this.wizardData.platform,
+          purpose: this.wizardData.botPurpose,
+          custom_qa: this.wizardData.customQA,
+          fallback_message: this.wizardData.fallbackMessage,
+          db_config: dbConfig,
+          theme: 'black'
+        })
+      });
+
+      const data = await res.json();
+      if (data.success && data.bot) {
+        setTimeout(() => {
+          this.setStarSpeech(`All set! 🎉 Your new agent "${data.bot.name}" is created and added to your Stack of Bots!`);
+          setTimeout(() => {
+            this.closeStarWizard();
+            this.loadBots();
+            this.openBotDetail(data.bot.id);
+          }, 1000);
+        }, 600);
+      } else {
+        alert('Failed to create bot: ' + (data.error || 'Server error'));
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Error creating bot.');
+    }
+  },
+
+  // Switch API tabs in Dashboard
+  switchApiTab(lang, btn) {
+    this.activeApiLang = lang;
+    document.querySelectorAll('.dash-subview .api-tab-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    const filenameEl = document.getElementById('api-snippet-filename');
+    const codeEl = document.getElementById('code-api-snippet');
+
+    if (lang === 'curl') {
+      if (filenameEl) filenameEl.textContent = 'Terminal (cURL)';
+      if (codeEl) codeEl.textContent = `curl -X POST http://localhost:3000/api/chat/message \\
+  -H "Content-Type: application/json" \\
+  -d '{"message":"Where is order #1042?","source":"Custom App"}'`;
+    } else if (lang === 'js') {
+      if (filenameEl) filenameEl.textContent = 'JavaScript (Fetch API)';
+      if (codeEl) codeEl.textContent = `// Query RuleMind Bot & Store Database
+const res = await fetch('http://localhost:3000/api/chat/message', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    message: 'Where is order #1042?',
+    customer: { name: 'Customer', email: 'shopper@store.com' }
+  })
+});
+const data = await res.json();
+console.log('Bot Reply:', data.reply);
+console.log('DB Query:', data.dbQuery);
+console.log('Order Data:', data.richCard);`;
+    } else if (lang === 'python') {
+      if (filenameEl) filenameEl.textContent = 'Python (requests)';
+      if (codeEl) codeEl.textContent = `# Query RuleMind Bot & Store Database
+import requests
+
+response = requests.post('http://localhost:3000/api/chat/message', json={
+    'message': 'Where is order #1042?',
+    'customer': {'name': 'Customer', 'email': 'shopper@store.com'}
+})
+data = response.json()
+print("Answer:", data['reply'])
+print("SQL Ran:", data['dbQuery'])`;
+    }
+  },
+
+  // Switch API tabs in Wizard
+  switchWizardApiTab(lang, btn) {
+    document.querySelectorAll('#wizard-panel-custom .api-tab-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    const filenameEl = document.getElementById('wizard-api-filename');
+    const codeEl = document.getElementById('wizard-api-code');
+
+    if (lang === 'curl') {
+      if (filenameEl) filenameEl.textContent = 'cURL Terminal';
+      if (codeEl) codeEl.textContent = `curl -X POST http://localhost:3000/api/chat/message \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "message": "Where is order #1042?",
+    "customer": { "name": "Jane Doe", "email": "jane@example.com" }
+  }'`;
+    } else if (lang === 'js') {
+      if (filenameEl) filenameEl.textContent = 'JavaScript (Fetch)';
+      if (codeEl) codeEl.textContent = `// Query Bot & Live Database
+const response = await fetch('http://localhost:3000/api/chat/message', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    message: 'Where is order #1042?',
+    customer: { name: 'Jane Doe', email: 'jane@example.com' }
+  })
+});
+const result = await response.json();
+console.log(result.reply, result.dbQuery);`;
+    } else if (lang === 'python') {
+      if (filenameEl) filenameEl.textContent = 'Python (requests)';
+      if (codeEl) codeEl.textContent = `import requests
+
+r = requests.post('http://localhost:3000/api/chat/message', json={
+    'message': 'Where is order #1042?',
+    'customer': {'name': 'Jane Doe', 'email': 'jane@example.com'}
+})
+print(r.json())`;
+    }
+  },
+
+  copyActiveApiSnippet() {
+    const el = document.getElementById('code-api-snippet');
+    if (el) {
+      navigator.clipboard.writeText(el.textContent.trim()).then(() => alert('API code copied to clipboard!'));
+    }
+  },
+
+  copyWizardApiCode() {
+    const el = document.getElementById('wizard-api-code');
+    if (el) {
+      navigator.clipboard.writeText(el.textContent.trim()).then(() => alert('API code copied to clipboard!'));
+    }
+  },
+
+  async finishCreateBot() {
+    this.setStarSpeech(`Woohoo! 🚀 Creating and configuring "${this.wizardData.botName}" with live database connectivity...`);
 
     try {
       const res = await fetch('/api/bots', {
@@ -274,7 +1009,8 @@ const app = {
           name: this.wizardData.botName || 'New Store Agent',
           store_type: this.wizardData.platform,
           store_name: this.wizardData.botName,
-          active_rules: this.wizardData.rules,
+          bot_type: this.wizardData.botType,
+          active_rules: ['rule-order-track', 'rule-product-stock', 'rule-return-refund', 'rule-discounts', 'rule-human-escalate'],
           theme: 'black'
         })
       });
@@ -282,13 +1018,13 @@ const app = {
       const data = await res.json();
       if (data.success) {
         setTimeout(() => {
-          this.setStarSpeech(`All set! 🎉 Your new agent "${data.bot.name}" is live!`);
+          this.setStarSpeech(`All set! 🎉 Your new agent "${data.bot.name}" is created and wired to your database!`);
           setTimeout(() => {
             this.closeStarWizard();
             this.loadBots();
             this.activeBotId = data.bot.id;
             this.showDashboard();
-            alert(`🎉 Success! Your new bot "${data.bot.name}" has been created and wired to your database!`);
+            alert(`🎉 Success! Your new bot "${data.bot.name}" has been created!`);
           }, 1200);
         }, 800);
       }

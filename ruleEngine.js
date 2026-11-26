@@ -33,6 +33,27 @@ class RuleEngine {
       };
     }
 
+    // Check Bot Specific Custom Q&A first
+    const bot = context.botId ? db.getBotById(context.botId) : (db.getBots()[0] || null);
+    if (bot && bot.custom_qa && Array.isArray(bot.custom_qa)) {
+      for (const qa of bot.custom_qa) {
+        if (!qa || !qa.question) continue;
+        const qLower = qa.question.toLowerCase().trim();
+        const keywords = qLower.split(/[\s,?]+/).filter(w => w.length > 3 && !['what', 'when', 'where', 'have', 'does', 'with', 'about', 'your'].includes(w));
+        const matchedKeyword = keywords.length > 0 && keywords.some(k => lowerText.includes(k));
+        
+        if (lowerText.includes(qLower) || qLower.includes(lowerText) || matchedKeyword) {
+          return {
+            reply: qa.answer,
+            matchedRule: { id: qa.id, name: `Custom Q&A: "${qa.question}"`, action_type: 'CUSTOM_QA' },
+            dbActionExecuted: false,
+            quickReplies: ['Ask another question', 'Track Order', 'Speak to Agent'],
+            contextUpdates: {}
+          };
+        }
+      }
+    }
+
     // 1. Evaluate rules by priority
     for (const rule of rules) {
       let isMatch = false;
@@ -76,10 +97,21 @@ class RuleEngine {
       }
     }
 
-    // 2. Fallback if no rule matched
+    // 2. Fallback if no rule matched (Log as Unanswered Question)
+    if (bot && rawText.length > 2) {
+      db.addUnansweredQuestion(bot.id, {
+        question: rawText,
+        customer: (context.customer && context.customer.email) || context.customerEmail || 'Guest Shopper'
+      });
+    }
+
+    const customFallback = (bot && bot.fallback_message) ||
+      "I'm sorry, I don't have an exact answer for that yet. Would you like me to check an order in our store database or connect you to our support specialist?";
+
     return {
-      reply: "👋 **Hello! How can we help you today?**\n\nI can instantly look up orders in our store database, verify inventory stock, show active discounts, or connect you to our support desk.",
+      reply: customFallback,
       matchedRule: null,
+      isUnanswered: true,
       dbActionExecuted: false,
       quickReplies: ['📦 Track Order #1042', '🔄 Return Policy', '🏷️ Product Stock', '🎉 Discount Codes', '👨‍💼 Speak to Agent'],
       contextUpdates: {}
@@ -124,13 +156,26 @@ class RuleEngine {
 
         const product = db.findProduct(productQuery);
         if (product) {
-          const stockStatus = product.in_stock ? '🟢 In Stock (Ready to Ship)' : '🔴 Temporarily Out of Stock';
+          const isOutOfStock = !product.in_stock || product.stock_qty <= 0;
+          const stockStatus = !isOutOfStock ? '🟢 In Stock (Ready to Ship)' : '🔴 Temporarily Out of Stock';
           let formatted = (rule.response_template || '')
             .replace(/{{title}}/g, product.title)
             .replace(/{{price}}/g, product.price.toFixed(2))
             .replace(/{{stock_status}}/g, stockStatus)
             .replace(/{{stock_qty}}/g, product.stock_qty)
             .replace(/{{sku}}/g, product.sku);
+
+          if (isOutOfStock) {
+            const targetBotId = context.botId || (db.getBots()[0] && db.getBots()[0].id);
+            if (targetBotId) {
+              db.addRestockRequest(targetBotId, {
+                sku: product.sku,
+                product_title: product.title,
+                customer_email: (context.customer && context.customer.email) || 'guest@store.com'
+              });
+            }
+            formatted += '\n\n🔔 *A restock request has been automatically logged for this product in your bot dashboard.*';
+          }
 
           return {
             reply: formatted,

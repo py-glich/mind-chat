@@ -361,8 +361,616 @@
       "description": "Free expedited courier delivery on orders above $30"
     }
   ],
-  "conversations": [],
+  "conversations": [
+    {
+      "id": "conv-55fd5b63",
+      "bot_id": "bot-0ed8b863",
+      "source": "web",
+      "customer": {
+        "name": "Store Visitor",
+        "email": "visitor@guest.com",
+        "ip": "::1"
+      },
+      "context": {
+        "awaiting": null,
+        "human_takeover": false,
+        "botId": "bot-0ed8b863"
+      },
+      "messages": [
+        {
+          "id": "msg-470b6674",
+          "sender": "user",
+          "text": "Are your headphones noise-cancelling?",
+          "timestamp": "2026-11-26T10:47:00.016Z"
+        },
+        {
+          "id": "msg-766c0df8",
+          "sender": "bot",
+          "text": "Yes, active hybrid ANC with 35dB reduction.",
+          "matchedRule": {
+            "id": "qa-2a126030",
+            "name": "Custom Q&A: \"Are your headphones noise-cancelling?\"",
+            "action_type": "CUSTOM_QA"
+          },
+          "dbActionExecuted": false,
+          "dbQuery": null,
+          "richCard": null,
+          "quickReplies": [
+            "Ask another question",
+            "Track Order",
+            "Speak to Agent"
+          ],
+          "timestamp": "2026-11-26T10:47:00.020Z"
+        }
+      ],
+      "status": "active",
+      "created_at": "2026-11-26T10:47:00.016Z",
+      "updated_at": "2026-11-26T10:47:00.020Z"
+    },
+    {
+      "id": "conv-ceead4d8",
+      "bot_id": "bot-2d8b782f",
+      "source": "web",
+      "customer": {
+        "name": "Store Visitor",
+        "email": "visitor@guest.com",
+        "ip": "::1"
+      },
+      "context": {
+        "awaiting": null,
+        "human_takeover": false,
+        "botId": "bot-2d8b782f"
+      },
+      "messages": [
+        {
+          "id": "msg-0b0b2d3f",
+          "sender": "user",
+          "text": "Can I hire your team for custom interior design consulting?",
+          "timestamp": "2026-11-26T10:46:48.612Z"
+        },
+        {
+          "id": "msg-75ba75ec",
+          "sender": "bot",
+          "text": "Yes! We offer 1-on-1 minimalist workspace design consultations. Book a slot at consulting.apex.com.",
+          "matchedRule": {
+            "id": "qa-1795690008603",
+            "name": "Custom Q&A: \"Can I hire your team for custom interior design consulting?\"",
+            "action_type": "CUSTOM_QA"
+          },
+          "dbActionExecuted": false,
+          "dbQuery": null,
+          "richCard": null,
+          "quickReplies": [
+            "Ask another question",
+            "Track Order",
+            "Speak to Agent"
+          ],
+          "timestamp": "2026-11-26T10:46:48.616Z"
+        }
+      ],
+      "status": "active",
+      "created_at": "2026-11-26T10:46:48.612Z",
+      "updated_at": "2026-11-26T10:46:48.616Z"
+    },
+    {
+      "id": "conv-5d9a9982",
+      "bot_id": "bot-2d8b782f",
+      "source": "web",
+      "customer": {
+        "name": "Store Visitor",
+        "email": "visitor@guest.com",
+        "ip": "::1"
+      },
+      "context": {
+        "awaiting": null,
+        "human_takeover": false,
+        "botId": "bot-2d8b782f"
+      },
+      "messages": [
+        {
+          "id": "msg-48410fb3",
+          "sender": "user",
+          "text": "Can I hire your team for custom interior design consulting?",
+          "timestamp": "2026-11-26T10:46:38.125Z"
+        },
+        {
+          "id": "msg-598fb306",
+          "sender": "bot",
+          "text": "I'm sorry, I don't have an exact answer for that yet. Would you like me to look up an order or connect you to our support team?",
+          "matchedRule": null,
+          "dbActionExecuted": false,
+          "dbQuery": null,
+          "richCard": null,
+          "quickReplies": [
+            "📦 Track Order #1042",
+            "🔄 Return Policy",
+            "🏷️ Product Stock",
+            "🎉 Discount Codes",
+            "👨‍💼 Speak to Agent"
+          ],
+          "timestamp": "2026-11-26T10:46:38.138Z"
+        }
+      ],
+      "status": "active",
+      "created_at": "2026-11-26T10:46:38.125Z",
+      "updated_at": "2026-11-26T10:46:38.138Z"
+    },
+    {
+      "id": "conv-819e5b4c",
+      "bot_id": "bot-2d8b782f",
+      "source": "web",
+      "customer": {
+        "name": "Store Visitor",
+        "email": "visitor@guest.com",
+        "ip": "::1"
+      },
+      "context": {
+        "awaiting": null,
+        "human_takeover": false,
+        "botId": "bot-2d8b782f"
+      },
+      "messages": [
+        {
+          "id": "msg-c3c09339",
+          "sender": "user",
+          "text": "Is the Ultra-slim OLED Monitor Light Bar in stock?",
+          "timestamp": "2026-11-26T10:46:16.212Z"
+        },
+        {
+          "id": "msg-c39f0055",
+          "sender": "bot",
+          "text": "🔍 We checked our current inventory catalog but couldn't find an exact match for \"ultra-slim oled monitor light bar in ?\".\n\nHere are some of our popular available items:\n• Minimalist Matte Black Desk Mat ($39.00)\n• Stealth Black PBT Keycaps ($69.00)\n• Ultra-slim Monitor Light Bar ($89.00)",
+          "matchedRule": {
+            "id": "rule-product-stock",
+            "name": "Product Stock & Price Check",
+            "action_type": "CHECK_PRODUCT"
+          },
+          "dbActionExecuted": true,
+          "dbQuery": "SELECT * FROM products WHERE query='ultra-slim oled monitor light bar in ?' (0 results)",
+          "richCard": null,
+          "quickReplies": [
+            "Desk Mat",
+            "Keycaps",
+            "Light Bar",
+            "Speak to Agent"
+          ],
+          "timestamp": "2026-11-26T10:46:16.216Z"
+        }
+      ],
+      "status": "active",
+      "created_at": "2026-11-26T10:46:16.212Z",
+      "updated_at": "2026-11-26T10:46:16.216Z"
+    },
+    {
+      "id": "conv-13cd6fbe",
+      "bot_id": "bot-2d8b782f",
+      "source": "web",
+      "customer": {
+        "name": "Store Visitor",
+        "email": "visitor@guest.com",
+        "ip": "::1"
+      },
+      "context": {
+        "awaiting": null,
+        "human_takeover": false,
+        "botId": "bot-2d8b782f"
+      },
+      "messages": [
+        {
+          "id": "msg-ef387ba9",
+          "sender": "user",
+          "text": "Do you offer a subscription box for desk mats?",
+          "timestamp": "2026-11-26T10:46:16.199Z"
+        },
+        {
+          "id": "msg-051b067d",
+          "sender": "bot",
+          "text": "🔍 We checked our current inventory catalog but couldn't find an exact match for \"do you offer a subscription box  desk mats?\".\n\nHere are some of our popular available items:\n• Minimalist Matte Black Desk Mat ($39.00)\n• Stealth Black PBT Keycaps ($69.00)\n• Ultra-slim Monitor Light Bar ($89.00)",
+          "matchedRule": {
+            "id": "rule-product-stock",
+            "name": "Product Stock & Price Check",
+            "action_type": "CHECK_PRODUCT"
+          },
+          "dbActionExecuted": true,
+          "dbQuery": "SELECT * FROM products WHERE query='do you offer a subscription box  desk mats?' (0 results)",
+          "richCard": null,
+          "quickReplies": [
+            "Desk Mat",
+            "Keycaps",
+            "Light Bar",
+            "Speak to Agent"
+          ],
+          "timestamp": "2026-11-26T10:46:16.205Z"
+        }
+      ],
+      "status": "active",
+      "created_at": "2026-11-26T10:46:16.199Z",
+      "updated_at": "2026-11-26T10:46:16.205Z"
+    },
+    {
+      "id": "conv-0bee1842",
+      "bot_id": "bot-2d8b782f",
+      "source": "web",
+      "customer": {
+        "name": "Store Visitor",
+        "email": "visitor@guest.com",
+        "ip": "::1"
+      },
+      "context": {
+        "awaiting": null,
+        "human_takeover": false,
+        "botId": "bot-2d8b782f"
+      },
+      "messages": [
+        {
+          "id": "msg-726c9345",
+          "sender": "user",
+          "text": "Do you ship internationally?",
+          "timestamp": "2026-11-26T10:46:16.187Z"
+        },
+        {
+          "id": "msg-9397a92f",
+          "sender": "bot",
+          "text": "Yes, worldwide delivery via FedEx and DHL in 3-7 business days.",
+          "matchedRule": {
+            "id": "qa-bot-2d8b782f-1",
+            "name": "Custom Q&A: \"Do you ship internationally?\"",
+            "action_type": "CUSTOM_QA"
+          },
+          "dbActionExecuted": false,
+          "dbQuery": null,
+          "richCard": null,
+          "quickReplies": [
+            "Ask another question",
+            "Track Order",
+            "Speak to Agent"
+          ],
+          "timestamp": "2026-11-26T10:46:16.191Z"
+        }
+      ],
+      "status": "active",
+      "created_at": "2026-11-26T10:46:16.187Z",
+      "updated_at": "2026-11-26T10:46:16.191Z"
+    },
+    {
+      "id": "conv-7a3a9acf",
+      "bot_id": "bot-default",
+      "source": "web",
+      "customer": {
+        "name": "Jane Doe",
+        "email": "jane@example.com",
+        "ip": "::1"
+      },
+      "context": {
+        "awaiting": null,
+        "human_takeover": false,
+        "active_order_id": "1042"
+      },
+      "messages": [
+        {
+          "id": "msg-3cf8750a",
+          "sender": "user",
+          "text": "Where is order #1042?",
+          "timestamp": "2026-11-26T09:43:36.785Z"
+        },
+        {
+          "id": "msg-076bb62d",
+          "sender": "bot",
+          "text": "📦 **Order #1042 Found!**\n\n• **Customer:** Jane Doe\n• **Status:** Out for Delivery\n• **Carrier:** FedEx Home Delivery\n• **Tracking Number:** `FX-982194821`\n• **Estimated Delivery:** Today by 5:30 PM\n• **Total:** $108.00\n\n**Items Ordered:**\n  • 1x Minimalist Matte Black Desk Mat ($39.00)\n  • 1x Stealth Black PBT Keycaps Set ($69.00)\n\nNeed to change shipping address or report an issue?",
+          "matchedRule": {
+            "id": "rule-order-track",
+            "name": "Order Tracking & Status",
+            "action_type": "CHECK_ORDER"
+          },
+          "dbActionExecuted": true,
+          "dbQuery": "SELECT * FROM orders WHERE order_id = '1042' OR customer_email = 'jane@example.com'",
+          "richCard": {
+            "type": "order",
+            "data": {
+              "order_id": "1042",
+              "customer_name": "Jane Doe",
+              "customer_email": "jane@example.com",
+              "source": "Shopify",
+              "status": "Out for Delivery",
+              "carrier": "FedEx Home Delivery",
+              "tracking_code": "FX-982194821",
+              "estimated_delivery": "Today by 5:30 PM",
+              "total_price": 108,
+              "currency": "USD",
+              "items": [
+                {
+                  "title": "Minimalist Matte Black Desk Mat",
+                  "qty": 1,
+                  "price": 39
+                },
+                {
+                  "title": "Stealth Black PBT Keycaps Set",
+                  "qty": 1,
+                  "price": 69
+                }
+              ],
+              "created_at": "2026-11-23T10:15:00Z",
+              "shipping_address": "742 Evergreen Terrace, Springfield, OR"
+            }
+          },
+          "quickReplies": [
+            "Return Policy",
+            "Speak to Agent",
+            "Track Another Order"
+          ],
+          "timestamp": "2026-11-26T09:43:36.797Z"
+        }
+      ],
+      "status": "active",
+      "created_at": "2026-11-26T09:43:36.785Z",
+      "updated_at": "2026-11-26T09:43:36.797Z"
+    },
+    {
+      "id": "conv-jane-1042",
+      "source": "Shopify Storefront",
+      "customer": {
+        "name": "Jane Doe",
+        "email": "jane@example.com",
+        "ip": "192.168.1.10"
+      },
+      "context": {
+        "awaiting": null,
+        "human_takeover": false,
+        "active_order_id": "1042"
+      },
+      "messages": [
+        {
+          "id": "msg-j1",
+          "sender": "user",
+          "text": "Where is my order #1042?",
+          "timestamp": "2026-11-26T08:25:02.150Z"
+        },
+        {
+          "id": "msg-j2",
+          "sender": "bot",
+          "text": "📦 **Order #1042 Found!**\n\n• **Customer:** Jane Doe\n• **Status:** Out for Delivery\n• **Carrier:** FedEx Home Delivery\n• **Tracking Number:** `FX-982194821`\n• **Estimated Delivery:** Today by 5:30 PM\n• **Total:** $108.00\n\n**Items Ordered:**\n  • 1x Minimalist Matte Black Desk Mat ($39.00)\n  • 1x Stealth Black PBT Keycaps Set ($69.00)\n\nNeed to change shipping address or report an issue?",
+          "matchedRule": {
+            "id": "rule-order-track",
+            "name": "Order Tracking & Status",
+            "action_type": "CHECK_ORDER"
+          },
+          "dbActionExecuted": true,
+          "dbQuery": "SELECT * FROM orders WHERE order_id = '1042' OR customer_email = 'jane@example.com'",
+          "quickReplies": [
+            "Return Policy",
+            "Speak to Agent",
+            "Track Another Order"
+          ],
+          "timestamp": "2026-11-26T08:25:12.151Z"
+        }
+      ],
+      "status": "active",
+      "created_at": "2026-11-26T08:25:02.151Z",
+      "updated_at": "2026-11-26T08:25:12.151Z"
+    },
+    {
+      "id": "conv-alex-stock",
+      "source": "WordPress / WooCommerce",
+      "customer": {
+        "name": "Alex Smith",
+        "email": "alex.smith@gmail.com",
+        "ip": "192.168.1.11"
+      },
+      "context": {
+        "awaiting": null,
+        "human_takeover": false
+      },
+      "messages": [
+        {
+          "id": "msg-a1",
+          "sender": "user",
+          "text": "Do you have stealth black keycaps in stock?",
+          "timestamp": "2026-11-26T07:25:02.151Z"
+        },
+        {
+          "id": "msg-a2",
+          "sender": "bot",
+          "text": "🏷️ **Product In Database:**\n\n• **Product:** Stealth Black PBT Keycaps Set\n• **Price:** $69.00\n• **Availability:** 🟢 In Stock (Ready to Ship)\n• **Warehouse Qty:** 15 units remaining\n• **SKU:** `SKU-002`\n\nWould you like a checkout link or have questions about specs?",
+          "matchedRule": {
+            "id": "rule-product-stock",
+            "name": "Product Stock & Price Check",
+            "action_type": "CHECK_PRODUCT"
+          },
+          "dbActionExecuted": true,
+          "dbQuery": "SELECT * FROM products WHERE sku LIKE '%keycaps%' OR title LIKE '%keycaps%'",
+          "quickReplies": [
+            "Check Another Product",
+            "Current Discounts",
+            "Track Order"
+          ],
+          "timestamp": "2026-11-26T07:25:12.151Z"
+        }
+      ],
+      "status": "active",
+      "created_at": "2026-11-26T07:25:02.151Z",
+      "updated_at": "2026-11-26T07:25:12.151Z"
+    },
+    {
+      "id": "conv-sarah-human",
+      "source": "Custom Website",
+      "customer": {
+        "name": "Sarah Connor",
+        "email": "sarah.c@techcorp.io",
+        "ip": "192.168.1.12"
+      },
+      "context": {
+        "awaiting": null,
+        "human_takeover": true
+      },
+      "messages": [
+        {
+          "id": "msg-s1",
+          "sender": "user",
+          "text": "I have a special bulk question and need to speak with a human agent.",
+          "timestamp": "2026-11-26T06:25:02.151Z"
+        },
+        {
+          "id": "msg-s2",
+          "sender": "bot",
+          "text": "👨‍💼 **Routing you to a Live Support Agent...**\n\nYour conversation has been flagged in our **Unified Support Desk**.\n\n• **Queue Status:** Next in line\n• **Average Response Time:** ~2 minutes\n• **Agent Notification:** Sent\n\nPlease describe your request below and an agent will join this thread.",
+          "matchedRule": {
+            "id": "rule-human-escalate",
+            "name": "Live Agent Escalation",
+            "action_type": "ESCALATE_HUMAN"
+          },
+          "dbActionExecuted": true,
+          "dbQuery": "UPDATE conversations SET human_takeover = true, status = 'queued'",
+          "quickReplies": [
+            "Cancel human request",
+            "Track Order"
+          ],
+          "timestamp": "2026-11-26T06:25:12.151Z"
+        },
+        {
+          "id": "msg-s3",
+          "sender": "agent",
+          "agentName": "Support Specialist",
+          "text": "Hello Sarah! I am your account representative. We can provide tiered discounts for orders above 20 units. What hardware items are you interested in?",
+          "timestamp": "2026-11-26T06:25:52.151Z"
+        }
+      ],
+      "status": "active",
+      "created_at": "2026-11-26T06:25:02.151Z",
+      "updated_at": "2026-11-26T06:25:52.151Z"
+    }
+  ],
   "bots": [
+    {
+      "id": "bot-0ed8b863",
+      "name": "Zenith Audio Concierge",
+      "store_type": "Shopify Storefront",
+      "store_name": "Zenith Audio Concierge",
+      "theme": "black",
+      "status": "active",
+      "purpose": "Audio Equipment Support & Restock Tracking",
+      "fallback_message": "I do not know that yet, but I can check tracking or connect an audio technician.",
+      "integration_status": "connected",
+      "created_at": "2026-11-26T10:46:59.979Z",
+      "rules_count": 6,
+      "active_rules": [
+        "rule-order-track",
+        "rule-return-refund",
+        "rule-product-stock",
+        "rule-discounts",
+        "rule-human-escalate"
+      ],
+      "custom_qa": [
+        {
+          "id": "qa-2a126030",
+          "question": "Are your headphones noise-cancelling?",
+          "answer": "Yes, active hybrid ANC with 35dB reduction."
+        }
+      ],
+      "unanswered_questions": [],
+      "restock_requests": [],
+      "db_config": {
+        "db_type": "Shopify Storefront API",
+        "endpoint": "http://localhost:3000/api/database",
+        "api_key": "key_bot-0ed8",
+        "status": "verified"
+      },
+      "stats": {
+        "total_chats": 0,
+        "db_queries": 0,
+        "accuracy_rate": "100%",
+        "human_handoffs": 0
+      }
+    },
+    {
+      "id": "bot-2d8b782f",
+      "name": "Apex Minimalist Support",
+      "store_type": "Shopify Storefront",
+      "store_name": "Apex Minimalist Support",
+      "theme": "black",
+      "status": "active",
+      "created_at": "2026-11-26T09:24:04.770Z",
+      "rules_count": 5,
+      "active_rules": [
+        "rule-order-track",
+        "rule-product-stock",
+        "rule-return-refund",
+        "rule-discounts",
+        "rule-human-escalate"
+      ],
+      "stats": {
+        "total_chats": 0,
+        "db_queries": 0,
+        "accuracy_rate": "100%",
+        "human_handoffs": 0
+      },
+      "custom_qa": [
+        {
+          "id": "qa-bot-2d8b782f-1",
+          "question": "Do you ship internationally?",
+          "answer": "Yes, worldwide delivery via FedEx and DHL in 3-7 business days."
+        },
+        {
+          "id": "qa-bot-2d8b782f-2",
+          "question": "What is your warranty policy?",
+          "answer": "All products come with a 2-year full replacement warranty against defects."
+        },
+        {
+          "id": "qa-1795690008603",
+          "question": "Can I hire your team for custom interior design consulting?",
+          "answer": "Yes! We offer 1-on-1 minimalist workspace design consultations. Book a slot at consulting.apex.com."
+        }
+      ],
+      "unanswered_questions": [
+        {
+          "id": "unans-1795689998131",
+          "question": "Can I hire your team for custom interior design consulting?",
+          "customer": "visitor@guest.com",
+          "timestamp": "2026-11-26T10:46:38.137Z",
+          "status": "resolved"
+        },
+        {
+          "id": "unans-bot-2d8b782f-1",
+          "question": "Can I pay with cryptocurrency or Bitcoin?",
+          "customer": "david@tech.io",
+          "timestamp": "2026-11-26T05:46:16.133Z",
+          "status": "unanswered"
+        },
+        {
+          "id": "unans-bot-2d8b782f-2",
+          "question": "Do you offer bulk student discounts?",
+          "customer": "student@university.edu",
+          "timestamp": "2026-11-26T08:46:16.133Z",
+          "status": "unanswered"
+        }
+      ],
+      "restock_requests": [
+        {
+          "id": "restock-bot-2d8b782f-1",
+          "sku": "SKU-003",
+          "product_title": "Ultra-slim OLED Monitor Light Bar",
+          "customer_email": "buyer@outlook.com",
+          "count": 8,
+          "requested_at": "2026-11-26T02:46:16.133Z"
+        },
+        {
+          "id": "restock-bot-2d8b782f-2",
+          "sku": "SKU-002",
+          "product_title": "Stealth Black PBT Keycaps Set",
+          "customer_email": "gamer@minimalist.org",
+          "count": 3,
+          "requested_at": "2026-11-26T09:46:16.133Z"
+        }
+      ],
+      "purpose": "Order Tracking, Stock Check & Customer Service",
+      "fallback_message": "I'm sorry, I don't have an exact answer for that yet. Would you like me to look up an order or connect you to our support team?",
+      "integration_status": "connected",
+      "db_config": {
+        "db_type": "Shopify Storefront API",
+        "endpoint": "http://localhost:3000/api/database",
+        "api_key": "key_bot-2d8b",
+        "status": "verified"
+      }
+    },
     {
       "id": "bot-0c814de1",
       "name": "Nova Streetwear Assistant",
@@ -381,6 +989,61 @@
         "db_queries": 0,
         "accuracy_rate": "100%",
         "human_handoffs": 0
+      },
+      "custom_qa": [
+        {
+          "id": "qa-bot-0c814de1-1",
+          "question": "Do you ship internationally?",
+          "answer": "Yes, worldwide delivery via FedEx and DHL in 3-7 business days."
+        },
+        {
+          "id": "qa-bot-0c814de1-2",
+          "question": "What is your warranty policy?",
+          "answer": "All products come with a 2-year full replacement warranty against defects."
+        }
+      ],
+      "unanswered_questions": [
+        {
+          "id": "unans-bot-0c814de1-1",
+          "question": "Can I pay with cryptocurrency or Bitcoin?",
+          "customer": "david@tech.io",
+          "timestamp": "2026-11-26T05:46:16.133Z",
+          "status": "unanswered"
+        },
+        {
+          "id": "unans-bot-0c814de1-2",
+          "question": "Do you offer bulk student discounts?",
+          "customer": "student@university.edu",
+          "timestamp": "2026-11-26T08:46:16.133Z",
+          "status": "unanswered"
+        }
+      ],
+      "restock_requests": [
+        {
+          "id": "restock-bot-0c814de1-1",
+          "sku": "SKU-003",
+          "product_title": "Ultra-slim OLED Monitor Light Bar",
+          "customer_email": "buyer@outlook.com",
+          "count": 8,
+          "requested_at": "2026-11-26T02:46:16.133Z"
+        },
+        {
+          "id": "restock-bot-0c814de1-2",
+          "sku": "SKU-002",
+          "product_title": "Stealth Black PBT Keycaps Set",
+          "customer_email": "gamer@minimalist.org",
+          "count": 3,
+          "requested_at": "2026-11-26T09:46:16.133Z"
+        }
+      ],
+      "purpose": "Order Tracking, Stock Check & Customer Service",
+      "fallback_message": "I'm sorry, I don't have an exact answer for that yet. Would you like me to look up an order or connect you to our support team?",
+      "integration_status": "connected",
+      "db_config": {
+        "db_type": "Shopify Storefront API",
+        "endpoint": "http://localhost:3000/api/database",
+        "api_key": "key_bot-0c81",
+        "status": "verified"
       }
     },
     {
@@ -405,6 +1068,61 @@
         "db_queries": 247,
         "accuracy_rate": "100%",
         "human_handoffs": 3
+      },
+      "custom_qa": [
+        {
+          "id": "qa-bot-default-1",
+          "question": "Do you ship internationally?",
+          "answer": "Yes, worldwide delivery via FedEx and DHL in 3-7 business days."
+        },
+        {
+          "id": "qa-bot-default-2",
+          "question": "What is your warranty policy?",
+          "answer": "All products come with a 2-year full replacement warranty against defects."
+        }
+      ],
+      "unanswered_questions": [
+        {
+          "id": "unans-bot-default-1",
+          "question": "Can I pay with cryptocurrency or Bitcoin?",
+          "customer": "david@tech.io",
+          "timestamp": "2026-11-26T05:46:16.133Z",
+          "status": "unanswered"
+        },
+        {
+          "id": "unans-bot-default-2",
+          "question": "Do you offer bulk student discounts?",
+          "customer": "student@university.edu",
+          "timestamp": "2026-11-26T08:46:16.133Z",
+          "status": "unanswered"
+        }
+      ],
+      "restock_requests": [
+        {
+          "id": "restock-bot-default-1",
+          "sku": "SKU-003",
+          "product_title": "Ultra-slim OLED Monitor Light Bar",
+          "customer_email": "buyer@outlook.com",
+          "count": 8,
+          "requested_at": "2026-11-26T02:46:16.133Z"
+        },
+        {
+          "id": "restock-bot-default-2",
+          "sku": "SKU-002",
+          "product_title": "Stealth Black PBT Keycaps Set",
+          "customer_email": "gamer@minimalist.org",
+          "count": 3,
+          "requested_at": "2026-11-26T09:46:16.133Z"
+        }
+      ],
+      "purpose": "Order Tracking, Stock Check & Customer Service",
+      "fallback_message": "I'm sorry, I don't have an exact answer for that yet. Would you like me to look up an order or connect you to our support team?",
+      "integration_status": "connected",
+      "db_config": {
+        "db_type": "Shopify Storefront API",
+        "endpoint": "http://localhost:3000/api/database",
+        "api_key": "key_bot-defa",
+        "status": "verified"
       }
     }
   ]

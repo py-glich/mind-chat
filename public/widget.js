@@ -16,6 +16,7 @@
   })();
 
   const SERVER_URL = (currentScript && currentScript.getAttribute('data-server')) || window.location.origin;
+  let currentBotId = (currentScript && currentScript.getAttribute('data-bot-id')) || 'bot-default';
   const STORE_SOURCE = (currentScript && currentScript.getAttribute('data-source')) || 'Storefront Web';
   const CUST_NAME = (currentScript && currentScript.getAttribute('data-customer-name')) || 'Store Visitor';
   const CUST_EMAIL = (currentScript && currentScript.getAttribute('data-customer-email')) || 'visitor@store.com';
@@ -488,6 +489,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           conversationId: conversationId,
+          botId: currentBotId,
           message: msg,
           source: STORE_SOURCE,
           customer: {
@@ -523,6 +525,9 @@
   // Global API
   window.RuleMindWidget = {
     toggle,
-    send: sendMessage
+    open: () => { if (!isOpen) toggle(); },
+    close: () => { if (isOpen) toggle(); },
+    send: sendMessage,
+    setBotId: (id) => { currentBotId = id; }
   };
 })();

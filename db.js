@@ -304,9 +304,63 @@ const INITIAL_DATA = {
       store_name: 'Apex Minimalist Gear',
       theme: 'black',
       status: 'active',
+      purpose: 'Order Tracking & Inventory Support',
+      fallback_message: "I'm sorry, I don't have an exact answer for that yet. Would you like me to look up an order or connect you to our support specialist?",
+      integration_status: 'connected',
       created_at: '2026-11-20T12:00:00Z',
       rules_count: 6,
       active_rules: ['rule-order-track', 'rule-return-refund', 'rule-product-stock', 'rule-discounts', 'rule-human-escalate', 'rule-business-hours'],
+      custom_qa: [
+        {
+          id: 'qa-1',
+          question: 'Do you ship internationally?',
+          answer: 'Yes! We ship worldwide with FedEx and DHL Express. Delivery takes 3-7 business days depending on location.'
+        },
+        {
+          id: 'qa-2',
+          question: 'What materials are used for the keycaps?',
+          answer: 'Our keycaps are made from double-shot thick PBT plastic with dark-on-dark stealth legends resistant to shine and friction.'
+        }
+      ],
+      unanswered_questions: [
+        {
+          id: 'unans-1',
+          question: 'Can I pay using cryptocurrency or Bitcoin?',
+          customer: 'david@tech.io',
+          timestamp: '2026-11-25T14:10:00Z',
+          status: 'unanswered'
+        },
+        {
+          id: 'unans-2',
+          question: 'Do you offer student discounts?',
+          customer: 'student@university.edu',
+          timestamp: '2026-11-26T09:30:00Z',
+          status: 'unanswered'
+        }
+      ],
+      restock_requests: [
+        {
+          id: 'restock-1',
+          sku: 'SKU-003',
+          product_title: 'Ultra-slim OLED Monitor Light Bar',
+          customer_email: 'buyer@outlook.com',
+          requested_at: '2026-11-25T18:45:00Z',
+          count: 8
+        },
+        {
+          id: 'restock-2',
+          sku: 'SKU-002',
+          product_title: 'Stealth Black PBT Keycaps Set',
+          customer_email: 'kevin@gamers.net',
+          requested_at: '2026-11-26T11:20:00Z',
+          count: 3
+        }
+      ],
+      db_config: {
+        type: 'Managed Store Database',
+        endpoint: 'http://localhost:3000/api/database',
+        status: 'Connected'
+      },
       stats: {
         total_chats: 128,
         db_queries: 247,
@@ -315,7 +369,130 @@ const INITIAL_DATA = {
       }
     }
   ],
-  conversations: []
+  conversations: [
+    {
+      id: 'conv-jane-1042',
+      source: 'Shopify Storefront',
+      customer: {
+        name: 'Jane Doe',
+        email: 'jane@example.com',
+        ip: '192.168.1.10'
+      },
+      context: {
+        awaiting: null,
+        human_takeover: false,
+        active_order_id: '1042'
+      },
+      messages: [
+        {
+          id: 'msg-j1',
+          sender: 'user',
+          text: 'Where is my order #1042?',
+          timestamp: new Date(Date.now() - 3600000).toISOString()
+        },
+        {
+          id: 'msg-j2',
+          sender: 'bot',
+          text: '📦 **Order #1042 Found!**\n\n• **Customer:** Jane Doe\n• **Status:** Out for Delivery\n• **Carrier:** FedEx Home Delivery\n• **Tracking Number:** `FX-982194821`\n• **Estimated Delivery:** Today by 5:30 PM\n• **Total:** $108.00\n\n**Items Ordered:**\n  • 1x Minimalist Matte Black Desk Mat ($39.00)\n  • 1x Stealth Black PBT Keycaps Set ($69.00)\n\nNeed to change shipping address or report an issue?',
+          matchedRule: {
+            id: 'rule-order-track',
+            name: 'Order Tracking & Status',
+            action_type: 'CHECK_ORDER'
+          },
+          dbActionExecuted: true,
+          dbQuery: "SELECT * FROM orders WHERE order_id = '1042' OR customer_email = 'jane@example.com'",
+          quickReplies: ['Return Policy', 'Speak to Agent', 'Track Another Order'],
+          timestamp: new Date(Date.now() - 3590000).toISOString()
+        }
+      ],
+      status: 'active',
+      created_at: new Date(Date.now() - 3600000).toISOString(),
+      updated_at: new Date(Date.now() - 3590000).toISOString()
+    },
+    {
+      id: 'conv-alex-stock',
+      source: 'WordPress / WooCommerce',
+      customer: {
+        name: 'Alex Smith',
+        email: 'alex.smith@gmail.com',
+        ip: '192.168.1.11'
+      },
+      context: {
+        awaiting: null,
+        human_takeover: false
+      },
+      messages: [
+        {
+          id: 'msg-a1',
+          sender: 'user',
+          text: 'Do you have stealth black keycaps in stock?',
+          timestamp: new Date(Date.now() - 7200000).toISOString()
+        },
+        {
+          id: 'msg-a2',
+          sender: 'bot',
+          text: '🏷️ **Product In Database:**\n\n• **Product:** Stealth Black PBT Keycaps Set\n• **Price:** $69.00\n• **Availability:** 🟢 In Stock (Ready to Ship)\n• **Warehouse Qty:** 15 units remaining\n• **SKU:** `SKU-002`\n\nWould you like a checkout link or have questions about specs?',
+          matchedRule: {
+            id: 'rule-product-stock',
+            name: 'Product Stock & Price Check',
+            action_type: 'CHECK_PRODUCT'
+          },
+          dbActionExecuted: true,
+          dbQuery: "SELECT * FROM products WHERE sku LIKE '%keycaps%' OR title LIKE '%keycaps%'",
+          quickReplies: ['Check Another Product', 'Current Discounts', 'Track Order'],
+          timestamp: new Date(Date.now() - 7190000).toISOString()
+        }
+      ],
+      status: 'active',
+      created_at: new Date(Date.now() - 7200000).toISOString(),
+      updated_at: new Date(Date.now() - 7190000).toISOString()
+    },
+    {
+      id: 'conv-sarah-human',
+      source: 'Custom Website',
+      customer: {
+        name: 'Sarah Connor',
+        email: 'sarah.c@techcorp.io',
+        ip: '192.168.1.12'
+      },
+      context: {
+        awaiting: null,
+        human_takeover: true
+      },
+      messages: [
+        {
+          id: 'msg-s1',
+          sender: 'user',
+          text: 'I have a special bulk question and need to speak with a human agent.',
+          timestamp: new Date(Date.now() - 10800000).toISOString()
+        },
+        {
+          id: 'msg-s2',
+          sender: 'bot',
+          text: '👨‍💼 **Routing you to a Live Support Agent...**\n\nYour conversation has been flagged in our **Unified Support Desk**.\n\n• **Queue Status:** Next in line\n• **Average Response Time:** ~2 minutes\n• **Agent Notification:** Sent\n\nPlease describe your request below and an agent will join this thread.',
+          matchedRule: {
+            id: 'rule-human-escalate',
+            name: 'Live Agent Escalation',
+            action_type: 'ESCALATE_HUMAN'
+          },
+          dbActionExecuted: true,
+          dbQuery: "UPDATE conversations SET human_takeover = true, status = 'queued'",
+          quickReplies: ['Cancel human request', 'Track Order'],
+          timestamp: new Date(Date.now() - 10790000).toISOString()
+        },
+        {
+          id: 'msg-s3',
+          sender: 'agent',
+          agentName: 'Support Specialist',
+          text: 'Hello Sarah! I am your account representative. We can provide tiered discounts for orders above 20 units. What hardware items are you interested in?',
+          timestamp: new Date(Date.now() - 10750000).toISOString()
+        }
+      ],
+      status: 'active',
+      created_at: new Date(Date.now() - 10800000).toISOString(),
+      updated_at: new Date(Date.now() - 10750000).toISOString()
+    }
+  ]
 };
 
 // Load or initialize DB
@@ -430,20 +607,76 @@ const db = {
     ) || null;
   },
 
-  getConversations: () => loadDB().conversations || [],
+  getConversations: () => {
+    const data = loadDB();
+    if (!data.conversations || data.conversations.length === 0) {
+      data.conversations = INITIAL_DATA.conversations || [];
+      saveDB(data);
+    }
+    return data.conversations;
+  },
 
   getBots: () => {
     const data = loadDB();
     if (!data.bots || data.bots.length === 0) {
-      data.bots = INITIAL_DATA.bots || [];
+      data.bots = JSON.parse(JSON.stringify(INITIAL_DATA.bots || []));
       saveDB(data);
+    } else {
+      let changed = false;
+      data.bots.forEach(b => {
+        if (!b.custom_qa) {
+          b.custom_qa = [
+            { id: `qa-${b.id}-1`, question: 'Do you ship internationally?', answer: 'Yes, worldwide delivery via FedEx and DHL in 3-7 business days.' },
+            { id: `qa-${b.id}-2`, question: 'What is your warranty policy?', answer: 'All products come with a 2-year full replacement warranty against defects.' }
+          ];
+          changed = true;
+        }
+        if (!b.unanswered_questions) {
+          b.unanswered_questions = [
+            { id: `unans-${b.id}-1`, question: 'Can I pay with cryptocurrency or Bitcoin?', customer: 'david@tech.io', timestamp: new Date(Date.now() - 3600000 * 5).toISOString(), status: 'unanswered' },
+            { id: `unans-${b.id}-2`, question: 'Do you offer bulk student discounts?', customer: 'student@university.edu', timestamp: new Date(Date.now() - 3600000 * 2).toISOString(), status: 'unanswered' }
+          ];
+          changed = true;
+        }
+        if (!b.restock_requests) {
+          b.restock_requests = [
+            { id: `restock-${b.id}-1`, sku: 'SKU-003', product_title: 'Ultra-slim OLED Monitor Light Bar', customer_email: 'buyer@outlook.com', count: 8, requested_at: new Date(Date.now() - 3600000 * 8).toISOString() },
+            { id: `restock-${b.id}-2`, sku: 'SKU-002', product_title: 'Stealth Black PBT Keycaps Set', customer_email: 'gamer@minimalist.org', count: 3, requested_at: new Date(Date.now() - 3600000 * 1).toISOString() }
+          ];
+          changed = true;
+        }
+        if (!b.purpose) {
+          b.purpose = 'Order Tracking, Stock Check & Customer Service';
+          changed = true;
+        }
+        if (!b.fallback_message) {
+          b.fallback_message = "I'm sorry, I don't have an exact answer for that yet. Would you like me to look up an order or connect you to our support team?";
+          changed = true;
+        }
+        if (!b.integration_status) {
+          b.integration_status = 'connected';
+          changed = true;
+        }
+        if (!b.db_config) {
+          b.db_config = {
+            db_type: b.store_type && b.store_type.includes('Shopify') ? 'Shopify Storefront API' : (b.store_type && b.store_type.includes('WordPress') ? 'WooCommerce REST API' : 'Custom PostgreSQL / MySQL'),
+            endpoint: 'http://localhost:3000/api/database',
+            api_key: `key_${b.id.substring(0, 8)}`,
+            status: 'verified'
+          };
+          changed = true;
+        }
+      });
+      if (changed) {
+        saveDB(data);
+      }
     }
     return data.bots;
   },
 
   getBotById: (id) => {
-    const data = loadDB();
-    return (data.bots || []).find(b => b.id === id) || null;
+    const bots = db.getBots();
+    return bots.find(b => b.id === id) || null;
   },
 
   saveBot: (bot) => {
@@ -465,6 +698,92 @@ const db = {
     data.bots = data.bots.filter(b => b.id !== id);
     saveDB(data);
     return true;
+  },
+
+  addBotQA: (botId, qa) => {
+    const data = loadDB();
+    const bot = (data.bots || []).find(b => b.id === botId);
+    if (!bot) return null;
+    if (!bot.custom_qa) bot.custom_qa = [];
+    const newQA = {
+      id: `qa-${Date.now()}`,
+      question: qa.question,
+      answer: qa.answer
+    };
+    bot.custom_qa.push(newQA);
+    saveDB(data);
+    return newQA;
+  },
+
+  deleteBotQA: (botId, qaId) => {
+    const data = loadDB();
+    const bot = (data.bots || []).find(b => b.id === botId);
+    if (!bot || !bot.custom_qa) return false;
+    bot.custom_qa = bot.custom_qa.filter(q => q.id !== qaId);
+    saveDB(data);
+    return true;
+  },
+
+  addUnansweredQuestion: (botId, qData) => {
+    const data = loadDB();
+    const bot = (data.bots || []).find(b => b.id === botId) || (data.bots && data.bots[0]);
+    if (!bot) return null;
+    if (!bot.unanswered_questions) bot.unanswered_questions = [];
+    const item = {
+      id: `unans-${Date.now()}`,
+      question: qData.question,
+      customer: qData.customer || 'Guest Shopper',
+      timestamp: new Date().toISOString(),
+      status: 'unanswered'
+    };
+    bot.unanswered_questions.unshift(item);
+    saveDB(data);
+    return item;
+  },
+
+  resolveUnansweredQuestion: (botId, qId, answerText) => {
+    const data = loadDB();
+    const bot = (data.bots || []).find(b => b.id === botId) || (data.bots && data.bots[0]);
+    if (!bot || !bot.unanswered_questions) return null;
+    const target = bot.unanswered_questions.find(q => q.id === qId);
+    if (target) {
+      target.status = 'resolved';
+      if (!bot.custom_qa) bot.custom_qa = [];
+      bot.custom_qa.push({
+        id: `qa-${Date.now()}`,
+        question: target.question,
+        answer: answerText
+      });
+      saveDB(data);
+      return target;
+    }
+    return null;
+  },
+
+  addRestockRequest: (botId, reqData) => {
+    const data = loadDB();
+    const bot = (data.bots || []).find(b => b.id === botId) || (data.bots && data.bots[0]);
+    if (!bot) return null;
+    if (!bot.restock_requests) bot.restock_requests = [];
+    const existing = bot.restock_requests.find(r => r.sku === reqData.sku);
+    if (existing) {
+      existing.count = (existing.count || 1) + 1;
+      existing.requested_at = new Date().toISOString();
+      saveDB(data);
+      return existing;
+    } else {
+      const item = {
+        id: `restock-${Date.now()}`,
+        sku: reqData.sku || 'SKU-UNKNOWN',
+        product_title: reqData.product_title || reqData.sku,
+        customer_email: reqData.customer_email || 'shopper@store.com',
+        requested_at: new Date().toISOString(),
+        count: 1
+      };
+      bot.restock_requests.unshift(item);
+      saveDB(data);
+      return item;
+    }
   },
 
   getConversationById: (id) => {

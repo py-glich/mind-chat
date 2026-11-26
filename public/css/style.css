@@ -1118,6 +1118,87 @@ a {
   height: 18px;
 }
 
+/* Step-by-step instructions */
+.instruction-step {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  align-items: flex-start;
+}
+
+.step-num-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-content {
+  flex: 1;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.code-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #14141c;
+  padding: 0.45rem 0.85rem;
+  border-top-left-radius: var(--radius-sm);
+  border-top-right-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  border-bottom: none;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.btn-copy-mini {
+  background: #20202c;
+  border: 1px solid #353545;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-copy-mini:hover {
+  background: #303042;
+}
+
+.api-snippet-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.api-tab-pill {
+  background: #14141e;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.api-tab-pill.active {
+  background: var(--accent-blue);
+  color: #fff;
+  border-color: var(--accent-blue);
+}
+
 /* Footer / Watermark */
 .site-footer {
   border-top: 1px solid var(--border-color);
@@ -1314,4 +1395,468 @@ input:checked + .toggle-slider:before { transform: translateX(16px); }
   .nav-menu { display: none; }
   .hero-trust-row { flex-direction: column; gap: 0.5rem; }
   .support-grid, .dash-kpi-row, .store-option-grid { grid-template-columns: 1fr; }
+}
+
+/* ======================================================================
+   BOTS STACK & MANAGEMENT VIEW STYLES
+   ====================================================================== */
+.bots-stack-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+}
+
+.bots-stack-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.bots-stack-title {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.35rem;
+}
+
+.bots-stack-sub {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+
+.bots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 1.5rem;
+}
+
+.bot-stack-card {
+  background: #0d0d12;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  position: relative;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.bot-stack-card:hover {
+  border-color: #3f3f50;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+}
+
+.bot-stack-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.bot-stack-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.bot-platform-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  background: #151520;
+  border: 1px solid #282838;
+  color: #93c5fd;
+}
+
+.bot-stack-purpose {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+  min-height: 40px;
+}
+
+.bot-metrics-row {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.bot-metric-chip {
+  background: #07070a;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.65rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.bot-metric-chip strong {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.bot-metric-chip.alert {
+  border-color: rgba(244, 63, 94, 0.4);
+  background: rgba(244, 63, 94, 0.08);
+  color: #fb7185;
+}
+
+.bot-metric-chip.alert strong {
+  color: #fda4af;
+}
+
+.bot-stack-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid #1a1a24;
+}
+
+.bot-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--accent-green);
+  font-weight: 600;
+}
+
+.bot-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-green);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.7);
+}
+
+.bot-open-btn {
+  background: #181824;
+  border: 1px solid #2e2e42;
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.bot-stack-card:hover .bot-open-btn {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+/* Empty State Card */
+.bot-empty-state {
+  grid-column: 1 / -1;
+  background: #09090d;
+  border: 1px dashed #282838;
+  border-radius: var(--radius-xl);
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+/* ======================================================================
+   BOT DETAIL VIEW (Tabs: Q&A, Unanswered, Restock, Integration)
+   ====================================================================== */
+.bot-detail-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.bot-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.bot-detail-title-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-back-stack {
+  background: #121218;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-back-stack:hover {
+  background: #1c1c24;
+  color: #ffffff;
+  border-color: #444455;
+}
+
+.bot-detail-tabs-bar {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 2rem;
+  overflow-x: auto;
+}
+
+.bot-detail-tab-btn {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.85rem 1.25rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bot-detail-tab-btn:hover {
+  color: #ffffff;
+}
+
+.bot-detail-tab-btn.active {
+  color: #ffffff;
+  border-bottom-color: #ffffff;
+}
+
+.bot-tab-count-badge {
+  font-size: 0.72rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-full);
+  background: #1c1c28;
+  color: var(--text-muted);
+}
+
+.bot-detail-tab-btn.active .bot-tab-count-badge {
+  background: #252538;
+  color: #ffffff;
+}
+
+.bot-detail-tab-pane {
+  display: none;
+}
+
+.bot-detail-tab-pane.active {
+  display: block;
+  animation: fadeIn 0.25s ease-out;
+}
+
+/* Tab 1: Unanswered Questions Log */
+.unanswered-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.unanswered-item-card {
+  background: #0d0d12;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.unanswered-item-card.resolved {
+  opacity: 0.75;
+  border-color: #1a2e22;
+}
+
+.unanswered-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.unanswered-question-box {
+  background: #050508;
+  border: 1px solid #1f1f2c;
+  border-left: 3px solid #f43f5e;
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  font-size: 0.95rem;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.unanswered-item-card.resolved .unanswered-question-box {
+  border-left-color: var(--accent-green);
+}
+
+.unanswered-answer-form {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+/* Tab 2: Q&A Manager */
+.qa-action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.qa-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.qa-card-item {
+  background: #0d0d12;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.qa-question-text {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #ffffff;
+  margin-bottom: 0.4rem;
+}
+
+.qa-answer-text {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+/* Tab 3: Restock Requests Table */
+.restock-table-wrap {
+  background: #0d0d12;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+
+.restock-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.86rem;
+}
+
+.restock-table th {
+  background: #08080c;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.9rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.restock-table td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #191924;
+  color: #ffffff;
+}
+
+.restock-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Platform Connection Banner */
+.conn-status-banner {
+  background: #09140e;
+  border: 1px solid #143522;
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.conn-status-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.conn-status-icon {
+  font-size: 1.6rem;
+}
+
+/* Repeater in Wizard */
+.wizard-qa-repeater {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.wizard-qa-row {
+  background: #08080c;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.btn-remove-qa {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.btn-remove-qa:hover {
+  color: #f43f5e;
 }
