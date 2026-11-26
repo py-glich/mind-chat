@@ -30,6 +30,11 @@ if (!process.env.VERCEL) {
   app.use(express.static(path.join(__dirname, 'public')));
 }
 
+// Health check endpoint for /api
+app.get('/api', (req, res) => {
+  res.json({ success: true, status: 'ok', service: 'RuleMind Engine API', timestamp: new Date().toISOString() });
+});
+
 // -------------------------------------------------------------
 // CHAT API
 // -------------------------------------------------------------
@@ -455,8 +460,16 @@ app.post('/api/integrations/woocommerce/webhook', (req, res) => {
   res.json({ success: true, synced_order: formatted });
 });
 
-// Start server if not running in Vercel serverless environment
-if (!process.env.VERCEL) {
+// Global error handler so requests never hang in serverless
+app.use((err, req, res, next) => {
+  console.error('Unhandled server error:', err);
+  if (!res.headersSent) {
+    res.status(500).json({ success: false, error: err.message || 'Internal Server Error' });
+  }
+});
+
+// Start standalone server when run directly (e.g. node server.js)
+if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`====================================================`);
     console.log(`🚀 RuleMind Server running on http://localhost:${PORT}`);
