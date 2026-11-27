@@ -1936,6 +1936,27 @@ print(r.json())`;
   }
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-  app.init();
+// Expose globally to window
+window.app = app;
+window.RuleMindApp = app;
+
+// Delegated click listener fallback
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  const action = btn.getAttribute('data-action');
+  if (action === 'login') app.openAuthModal('login');
+  else if (action === 'signup') app.openAuthModal('signup');
+  else if (action === 'dashboard') app.showDashboard();
+  else if (action === 'logout') app.logout();
+  else if (action === 'demo') app.triggerDemoChat();
 });
+
+// Robust DOM initialization
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    app.init();
+  });
+} else {
+  app.init();
+}

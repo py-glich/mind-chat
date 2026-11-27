@@ -80,8 +80,8 @@
     <div class="nav-actions">
       <!-- Guest State -->
       <div id="nav-guest-actions" style="display:flex; align-items:center; gap:1.25rem;">
-        <button class="nav-link-login" onclick="app.openAuthModal('login')">Log in</button>
-        <button class="btn-pill btn-pill-primary" onclick="app.openAuthModal('signup')">Book a demo →</button>
+        <button class="nav-link-login" onclick="app.openAuthModal('login')" data-action="login">Log in</button>
+        <button class="btn-pill btn-pill-primary" onclick="app.openAuthModal('signup')" data-action="signup">Book a demo →</button>
       </div>
 
       <!-- Logged-in State -->
@@ -1102,7 +1102,7 @@ add_action('wp_footer', function() {
   </div>
 
   <!-- Embed Standalone Chat Widget -->
-  <script src="/widget.js" data-theme="black"></script>
-  <script src="/js/app.js"></script>
+  <script src="/widget.js?v=2.1.0" data-theme="black"></script>
+  <script src="/js/app.js?v=2.1.0"></script>
 </body>
 </html>
