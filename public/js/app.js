@@ -26,6 +26,8 @@ const app = {
     this.loadConversations();
     this.loadDatabaseData();
     this.startPolling();
+    this.initGalaxyCanvas();
+    this.initMockChatLoop();
   },
 
   // -------------------------------------------------------------
@@ -1371,57 +1373,222 @@ print("SQL Ran:", data['dbQuery'])`;
     const stream = document.getElementById('mock-chat-stream');
     const title = document.getElementById('mock-chat-title');
     const badge = document.getElementById('mock-chat-badge');
+    if (!stream) return;
+
+    // Highlight active queue item
+    document.querySelectorAll('.mockup-queue-col .queue-item').forEach((item, idx) => {
+      item.classList.remove('active');
+      if (person === 'jane' && idx === 0) item.classList.add('active');
+      if (person === 'alex' && idx === 1) item.classList.add('active');
+      if (person === 'sarah' && idx === 2) item.classList.add('active');
+    });
+
+    const profileAvatar = document.querySelector('.mockup-profile-col .profile-avatar-row img');
+    const profileName = document.querySelector('.mockup-profile-col .profile-avatar-row div div:first-child');
+    const profileSub = document.querySelector('.mockup-profile-col .profile-avatar-row div div:last-child');
+    const profileLtv = document.querySelectorAll('.mockup-profile-col .profile-kpi-box div:last-child')[0];
+    const profileOrders = document.querySelectorAll('.mockup-profile-col .profile-kpi-box div:last-child')[1];
 
     if (person === 'jane') {
-      title.textContent = 'Jane Doe';
-      badge.textContent = 'Shopify Storefront';
+      if (title) title.textContent = 'Jane Doe';
+      if (badge) badge.textContent = 'Shopify Storefront';
+      if (profileAvatar) profileAvatar.src = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&h=120&q=80';
+      if (profileName) profileName.textContent = 'Jane Doe';
+      if (profileSub) profileSub.textContent = 'Verified Shopify Shopper';
+      if (profileLtv) profileLtv.textContent = '$342.00';
+      if (profileOrders) profileOrders.textContent = '3 Orders';
+
       stream.innerHTML = `
         <div class="mock-msg user">Hi, where is my order #1042?</div>
         <div class="mock-msg bot">
           📦 <strong>Order #1042 Verified in Database!</strong><br><br>
           • <strong>Customer:</strong> Jane Doe<br>
-          • <strong>Status:</strong> Out for Delivery<br>
-          • <strong>Carrier:</strong> FedEx Home Delivery<br>
+          • <strong>Status:</strong> <span style="color:var(--accent-green); font-weight:600;">Out for Delivery</span><br>
+          • <strong>Carrier:</strong> FedEx Express Delivery<br>
           • <strong>Estimated Delivery:</strong> Today by 5:30 PM<br>
           • <strong>Total:</strong> $108.00
+
           <div class="mock-card">
-            <div style="display:flex; justify-content:space-between; font-weight:700;">
-              <span>Tracking: FX-982194821</span>
-              <span style="color:var(--accent-green);">ON TIME</span>
+            <div style="display:flex; justify-content:space-between; align-items:center; font-weight:700; margin-bottom:6px;">
+              <span style="font-size:0.78rem;">Tracking: FX-982194821</span>
+              <span style="color:var(--accent-green); font-size:0.68rem; border:1px solid rgba(16,185,129,0.3); padding:2px 7px; border-radius:12px; background:rgba(16,185,129,0.1);">ON TIME</span>
             </div>
-            <div style="color:var(--text-secondary); font-size:0.72rem; margin-top:4px;">
-              1x Minimalist Matte Black Desk Mat, 1x Stealth Keycaps
+            <div class="mock-product-row">
+              <img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=120&h=120&q=80" class="mock-product-thumb" alt="Desk Mat">
+              <div style="flex:1;">
+                <div style="font-weight:600; font-size:0.8rem; color:#fff;">Minimalist Matte Black Desk Mat</div>
+                <div style="font-size:0.7rem; color:var(--text-secondary);">Qty: 1 • SKU-001 • $48.00</div>
+              </div>
+            </div>
+            <div class="mock-product-row">
+              <img src="https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&w=120&h=120&q=80" class="mock-product-thumb" alt="Keycaps">
+              <div style="flex:1;">
+                <div style="font-weight:600; font-size:0.8rem; color:#fff;">Stealth Black PBT Keycaps Set</div>
+                <div style="font-size:0.7rem; color:var(--text-secondary);">Qty: 1 • SKU-002 • $60.00</div>
+              </div>
             </div>
           </div>
         </div>
       `;
     } else if (person === 'alex') {
-      title.textContent = 'Alex Smith';
-      badge.textContent = 'WooCommerce Store';
+      if (title) title.textContent = 'Alex Smith';
+      if (badge) badge.textContent = 'WooCommerce Store';
+      if (profileAvatar) profileAvatar.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&h=120&q=80';
+      if (profileName) profileName.textContent = 'Alex Smith';
+      if (profileSub) profileSub.textContent = 'WooCommerce Customer';
+      if (profileLtv) profileLtv.textContent = '$195.00';
+      if (profileOrders) profileOrders.textContent = '2 Orders';
+
       stream.innerHTML = `
         <div class="mock-msg user">Do you have the stealth black keycaps in stock?</div>
         <div class="mock-msg bot">
-          🏷️ <strong>Product Verified in Database!</strong><br><br>
+          🏷️ <strong>Product Verified in Store Inventory!</strong><br><br>
           • <strong>Product:</strong> Stealth Black PBT Keycaps Set<br>
           • <strong>Price:</strong> $69.00<br>
-          • <strong>Availability:</strong> 🟢 In Stock (Ready to Ship)<br>
+          • <strong>Availability:</strong> <span style="color:var(--accent-green); font-weight:700;">🟢 In Stock (Ready to Ship)</span><br>
           • <strong>Warehouse Qty:</strong> 15 units remaining<br>
           • <strong>SKU:</strong> <code>SKU-002</code>
+          
+          <div class="mock-card">
+            <div class="mock-product-row">
+              <img src="https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&w=120&h=120&q=80" class="mock-product-thumb" alt="Keycaps">
+              <div style="flex:1;">
+                <div style="font-weight:600; font-size:0.8rem; color:#fff;">Stealth Black PBT Keycaps Set</div>
+                <div style="font-size:0.7rem; color:var(--accent-green);">Warehouse A • Fast Dispatch</div>
+              </div>
+              <button class="btn-pill btn-pill-primary" style="font-size:0.72rem; padding:0.35rem 0.75rem;" onclick="app.triggerDemoChat()">Order Now</button>
+            </div>
+          </div>
         </div>
       `;
     } else if (person === 'sarah') {
-      title.textContent = 'Sarah Connor';
-      badge.textContent = 'Custom Web';
+      if (title) title.textContent = 'Sarah Connor';
+      if (badge) badge.textContent = 'Custom Web Store';
+      if (profileAvatar) profileAvatar.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80';
+      if (profileName) profileName.textContent = 'Sarah Connor';
+      if (profileSub) profileSub.textContent = 'High-Value Shopper';
+      if (profileLtv) profileLtv.textContent = '$520.00';
+      if (profileOrders) profileOrders.textContent = '4 Orders';
+
       stream.innerHTML = `
-        <div class="mock-msg user">I need to talk to a human agent please.</div>
+        <div class="mock-msg user">Are there any active promo codes for first-time orders?</div>
         <div class="mock-msg bot">
-          👨‍💼 <strong>Routing you to a Live Support Agent...</strong><br><br>
-          • Queue Status: Next in line<br>
-          • Agent Notification: Sent to dashboard<br>
-          A specialist is joining this thread right now.
+          🎉 <strong>Active Store Discount Rules Verified!</strong><br><br>
+          • <strong>Code:</strong> <code>WELCOME10</code><br>
+          • <strong>Discount:</strong> 10% Off Orders over $50<br>
+          • <strong>Status:</strong> Active & Valid Storewide
+
+          <div class="mock-card" style="background:#131226; border-color:rgba(168,85,247,0.35);">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <div style="font-weight:700; color:#c084fc; font-size:0.85rem;">PROMO VOUCHER: WELCOME10</div>
+                <div style="font-size:0.72rem; color:var(--text-secondary); margin-top:2px;">Applied automatically at checkout</div>
+              </div>
+              <span class="pill-badge-mint">10% OFF</span>
+            </div>
+          </div>
         </div>
       `;
     }
+  },
+
+  // Automated gentle chat loop on hero mockup
+  initMockChatLoop() {
+    const sequence = ['jane', 'alex', 'sarah'];
+    let idx = 0;
+    this.mockLoopInterval = setInterval(() => {
+      const home = document.getElementById('view-homepage');
+      if (home && home.style.display !== 'none') {
+        idx = (idx + 1) % sequence.length;
+        this.mockSelect(sequence[idx]);
+      }
+    }, 6500);
+  },
+
+  // Subtle 60fps Galaxy Particle Canvas
+  initGalaxyCanvas() {
+    const canvas = document.getElementById('galaxy-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const count = Math.min(Math.floor((width * height) / 18000), 75);
+    const colors = [
+      'rgba(129, 140, 248, ', // indigo
+      'rgba(192, 132, 252, ', // violet
+      'rgba(56, 189, 248, ',  // starlight cyan
+      'rgba(255, 255, 255, '  // pure star
+    ];
+
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 1.6 + 0.6,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: (Math.random() - 0.5) * 0.25,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        alpha: Math.random() * 0.6 + 0.2,
+        dAlpha: (Math.random() * 0.01 + 0.005) * (Math.random() < 0.5 ? 1 : -1)
+      });
+    }
+
+    function render() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Draw faint connections
+      for (let i = 0; i < particles.length; i++) {
+        const p1 = particles[i];
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 85) {
+            const lineAlpha = (1 - dist / 85) * 0.12;
+            ctx.strokeStyle = `rgba(129, 140, 248, ${lineAlpha})`;
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw particles
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0) p.x = width;
+        else if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height;
+        else if (p.y > height) p.y = 0;
+
+        p.alpha += p.dAlpha;
+        if (p.alpha <= 0.15 || p.alpha >= 0.85) p.dAlpha *= -1;
+
+        ctx.fillStyle = p.color + p.alpha + ')';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      requestAnimationFrame(render);
+    }
+
+    render();
   },
 
   triggerDemoChat() {

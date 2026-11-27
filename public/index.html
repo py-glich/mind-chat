@@ -4,10 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MindChat: The Zero-AI Rule Customer Platform for E-Commerce Brands</title>
-  <link rel="stylesheet" href="/css/style.css?v=2.4.1">
+  <link rel="stylesheet" href="/css/style.css?v=2.5.0">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23000'/><path d='M30 50h40M50 30v40' stroke='%233b82f6' stroke-width='12' stroke-linecap='round'/></svg>">
 </head>
 <body>
+
+  <!-- Background Galaxy Particle Canvas -->
+  <canvas id="galaxy-canvas"></canvas>
 
   <!-- ======================================================================
        NAVBAR (Exact MindChat Header with Mega Menu, Log In & Sign Up)
@@ -167,38 +170,53 @@
 
             <ul class="queue-list">
               <li class="queue-item active" onclick="app.mockSelect('jane')">
-                <div style="display:flex; justify-content:space-between; font-weight:600; font-size:0.85rem;">
-                  <span>Jane Doe</span>
-                  <span style="font-size:0.7rem; color:var(--text-muted);">2m ago</span>
-                </div>
-                <div style="font-size:0.78rem; color:var(--text-secondary); margin-top:2px;">Where is order #1042?</div>
-                <div style="display:flex; gap:4px; margin-top:5px;">
-                  <span class="badge-channel">Shopify</span>
-                  <span class="brand-badge" style="font-size:0.62rem;">Rule: Order Found</span>
+                <div style="display:flex; gap:10px; align-items:center;">
+                  <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&h=80&q=80" class="queue-avatar-img" alt="Jane Doe">
+                  <div style="flex:1; min-width:0;">
+                    <div style="display:flex; justify-content:space-between; font-weight:600; font-size:0.85rem;">
+                      <span>Jane Doe</span>
+                      <span style="font-size:0.7rem; color:var(--text-muted);">2m ago</span>
+                    </div>
+                    <div style="font-size:0.78rem; color:var(--text-secondary); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Where is order #1042?</div>
+                    <div style="display:flex; gap:4px; margin-top:5px;">
+                      <span class="badge-channel">Shopify</span>
+                      <span class="brand-badge" style="font-size:0.62rem;">Rule: Order Found</span>
+                    </div>
+                  </div>
                 </div>
               </li>
 
               <li class="queue-item" onclick="app.mockSelect('alex')">
-                <div style="display:flex; justify-content:space-between; font-weight:600; font-size:0.85rem;">
-                  <span>Alex Smith</span>
-                  <span style="font-size:0.7rem; color:var(--text-muted);">14m ago</span>
-                </div>
-                <div style="font-size:0.78rem; color:var(--text-secondary); margin-top:2px;">Is stealth keycaps in stock?</div>
-                <div style="display:flex; gap:4px; margin-top:5px;">
-                  <span class="badge-channel">WooCommerce</span>
-                  <span class="brand-badge" style="font-size:0.62rem;">Rule: Stock Check</span>
+                <div style="display:flex; gap:10px; align-items:center;">
+                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&h=80&q=80" class="queue-avatar-img" alt="Alex Smith">
+                  <div style="flex:1; min-width:0;">
+                    <div style="display:flex; justify-content:space-between; font-weight:600; font-size:0.85rem;">
+                      <span>Alex Smith</span>
+                      <span style="font-size:0.7rem; color:var(--text-muted);">14m ago</span>
+                    </div>
+                    <div style="font-size:0.78rem; color:var(--text-secondary); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Is stealth keycaps in stock?</div>
+                    <div style="display:flex; gap:4px; margin-top:5px;">
+                      <span class="badge-channel">WooCommerce</span>
+                      <span class="brand-badge" style="font-size:0.62rem;">Rule: Stock Check</span>
+                    </div>
+                  </div>
                 </div>
               </li>
 
               <li class="queue-item" onclick="app.mockSelect('sarah')">
-                <div style="display:flex; justify-content:space-between; font-weight:600; font-size:0.85rem;">
-                  <span>Sarah Connor</span>
-                  <span style="font-size:0.7rem; color:var(--text-muted);">1h ago</span>
-                </div>
-                <div style="font-size:0.78rem; color:var(--text-secondary); margin-top:2px;">Speak with live representative</div>
-                <div style="display:flex; gap:4px; margin-top:5px;">
-                  <span class="badge-channel">Web</span>
-                  <span style="font-size:0.62rem; color:#f59e0b; border:1px solid #f59e0b; padding:1px 5px; border-radius:10px;">Human Takeover</span>
+                <div style="display:flex; gap:10px; align-items:center;">
+                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&h=80&q=80" class="queue-avatar-img" alt="Sarah Connor">
+                  <div style="flex:1; min-width:0;">
+                    <div style="display:flex; justify-content:space-between; font-weight:600; font-size:0.85rem;">
+                      <span>Sarah Connor</span>
+                      <span style="font-size:0.7rem; color:var(--text-muted);">1h ago</span>
+                    </div>
+                    <div style="font-size:0.78rem; color:var(--text-secondary); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Speak with live representative</div>
+                    <div style="display:flex; gap:4px; margin-top:5px;">
+                      <span class="badge-channel">Web</span>
+                      <span style="font-size:0.62rem; color:#f59e0b; border:1px solid #f59e0b; padding:1px 5px; border-radius:10px;">Human Takeover</span>
+                    </div>
+                  </div>
                 </div>
               </li>
             </ul>
@@ -222,18 +240,32 @@
               <div class="mock-msg bot">
                 📦 <strong>Order #1042 Verified in Database!</strong><br><br>
                 • <strong>Customer:</strong> Jane Doe<br>
-                • <strong>Status:</strong> Out for Delivery<br>
-                • <strong>Carrier:</strong> FedEx Home Delivery<br>
+                • <strong>Status:</strong> <span style="color:var(--accent-green); font-weight:600;">Out for Delivery</span><br>
+                • <strong>Carrier:</strong> FedEx Express Delivery<br>
                 • <strong>Estimated Delivery:</strong> Today by 5:30 PM<br>
                 • <strong>Total:</strong> $108.00
 
                 <div class="mock-card">
-                  <div style="display:flex; justify-content:space-between; font-weight:700;">
-                    <span>Tracking: FX-982194821</span>
-                    <span style="color:var(--accent-green);">ON TIME</span>
+                  <div style="display:flex; justify-content:space-between; align-items:center; font-weight:700; margin-bottom:6px;">
+                    <span style="font-size:0.78rem;">Tracking: FX-982194821</span>
+                    <span style="color:var(--accent-green); font-size:0.68rem; border:1px solid rgba(16,185,129,0.3); padding:2px 7px; border-radius:12px; background:rgba(16,185,129,0.1);">ON TIME</span>
                   </div>
-                  <div style="color:var(--text-secondary); font-size:0.72rem; margin-top:4px;">
-                    1x Minimalist Matte Black Desk Mat, 1x Stealth Keycaps
+
+                  <!-- Product Items in Order -->
+                  <div class="mock-product-row">
+                    <img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=120&h=120&q=80" class="mock-product-thumb" alt="Desk Mat">
+                    <div style="flex:1;">
+                      <div style="font-weight:600; font-size:0.8rem; color:#fff;">Minimalist Matte Black Desk Mat</div>
+                      <div style="font-size:0.7rem; color:var(--text-secondary);">Qty: 1 • SKU-001 • $48.00</div>
+                    </div>
+                  </div>
+
+                  <div class="mock-product-row">
+                    <img src="https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&w=120&h=120&q=80" class="mock-product-thumb" alt="Keycaps">
+                    <div style="flex:1;">
+                      <div style="font-weight:600; font-size:0.8rem; color:#fff;">Stealth Black PBT Keycaps Set</div>
+                      <div style="font-size:0.7rem; color:var(--text-secondary);">Qty: 1 • SKU-002 • $60.00</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -243,10 +275,10 @@
           <!-- 4. Right Customer 360 Drawer -->
           <div class="mockup-profile-col">
             <div class="profile-avatar-row">
-              <div class="profile-avatar">JD</div>
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&h=120&q=80" class="profile-avatar-img" alt="Jane Doe">
               <div>
-                <div style="font-weight:700; font-size:0.9rem;">Jane Doe</div>
-                <div style="font-size:0.75rem; color:var(--text-muted);">Customer since 2024</div>
+                <div style="font-weight:700; font-size:0.95rem;">Jane Doe</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">Verified Shopify Shopper</div>
               </div>
             </div>
 
@@ -270,12 +302,15 @@
               <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.5rem;">
                 Recent Database Orders
               </div>
-              <div style="background:#13131c; border:1px solid var(--border-subtle); border-radius:6px; padding:0.65rem;">
-                <div style="display:flex; justify-content:space-between; font-weight:600; font-size:0.8rem;">
-                  <span>#1042 — $108.00</span>
-                  <span style="color:var(--accent-green);">Out for delivery</span>
+              <div style="background:#101122; border:1px solid var(--border-color); border-radius:8px; padding:0.75rem; display:flex; align-items:center; gap:10px;">
+                <img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=80&h=80&q=80" style="width:36px; height:36px; border-radius:4px; object-fit:cover;" alt="Order">
+                <div style="flex:1;">
+                  <div style="display:flex; justify-content:space-between; font-weight:600; font-size:0.8rem;">
+                    <span>#1042 — $108.00</span>
+                    <span style="color:var(--accent-green); font-size:0.72rem;">Out for delivery</span>
+                  </div>
+                  <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">FedEx Home Delivery • Today</div>
                 </div>
-                <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">FedEx • Today</div>
               </div>
             </div>
           </div>
@@ -304,6 +339,77 @@
         <div class="marquee-brand">HAIR PANTRY</div>
         <div class="marquee-brand">ISMAIL WEAR</div>
         <div class="marquee-brand">ENGINE APPAREL</div>
+      </div>
+    </section>
+
+    <!-- Video Showcase: 60-Second Walkthrough -->
+    <section class="video-showcase-section">
+      <div class="section-head" style="margin-bottom:2rem;">
+        <div class="section-eyebrow">VIDEO WALKTHROUGH</div>
+        <h2 class="section-title">See zero-AI rule automation <span class="serif-italic">in motion.</span></h2>
+        <p class="section-subtext">
+          Watch how MindChat queries Shopify orders and inventory directly with sub-50ms latency.
+        </p>
+      </div>
+
+      <div class="video-showcase-frame">
+        <video autoplay loop muted playsinline poster="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80">
+          <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay-banner">
+          <div>
+            <div class="video-badge">
+              <span class="video-live-dot"></span> LIVE DEMO WALKTHROUGH
+            </div>
+            <h3 style="font-size:1.35rem; color:#fff; font-weight:700;">Deterministic Database Query Pipeline</h3>
+            <p style="font-size:0.85rem; color:var(--text-secondary); max-width:560px; margin-top:0.25rem;">
+              Direct SQL/REST hooks to Shopify, WooCommerce, and MySQL. Zero third-party LLM latency.
+            </p>
+          </div>
+          <button class="btn-pill btn-pill-primary" onclick="app.triggerDemoChat()" style="white-space:nowrap;">
+            Launch Interactive Widget →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Photographic Feature Cards (E-Commerce Storefronts & Logistics) -->
+    <section class="section-wrapper" style="padding-top:2rem;">
+      <div class="section-head">
+        <div class="section-eyebrow">BUILT FOR REAL COMMERCE</div>
+        <h2 class="section-title">Engineered for high-velocity <span class="serif-italic">storefronts.</span></h2>
+        <p class="section-subtext">
+          From checkout to warehouse fulfillment, connect your customer support directly to your live operations.
+        </p>
+      </div>
+
+      <div class="photo-showcase-grid">
+        <div class="photo-card" onclick="app.openAuthModal('signup')">
+          <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80" class="photo-card-img" alt="Storefronts">
+          <div class="photo-card-content">
+            <div class="photo-card-tag">Shopify & WooCommerce</div>
+            <h3 class="photo-card-title">Live Storefront Integration</h3>
+            <p class="photo-card-desc">1-line theme liquid or PHP script embed keeps shoppers on your store without third-party redirects.</p>
+          </div>
+        </div>
+
+        <div class="photo-card" onclick="app.openAuthModal('signup')">
+          <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80" class="photo-card-img" alt="Warehouse">
+          <div class="photo-card-content">
+            <div class="photo-card-tag">Real-Time Inventory</div>
+            <h3 class="photo-card-title">Warehouse Stock & Restock Alerts</h3>
+            <p class="photo-card-desc">Instant SKU availability checks. Shoppers can subscribe to automated back-in-stock alerts.</p>
+          </div>
+        </div>
+
+        <div class="photo-card" onclick="app.openAuthModal('signup')">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" class="photo-card-img" alt="Database">
+          <div class="photo-card-content">
+            <div class="photo-card-tag">Zero-AI Database Engine</div>
+            <h3 class="photo-card-title">Sub-50ms Deterministic Lookups</h3>
+            <p class="photo-card-desc">Never hallucinate tracking numbers or return policies. Exact records from your PostgreSQL or MySQL database.</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1124,7 +1230,7 @@ add_action('wp_footer', function() {
   </div>
 
   <!-- Embed Standalone Chat Widget -->
-  <script src="/widget.js?v=2.4.1" data-theme="black"></script>
-  <script src="/js/app.js?v=2.4.1"></script>
+  <script src="/widget.js?v=2.5.0" data-theme="black"></script>
+  <script src="/js/app.js?v=2.5.0"></script>
 </body>
 </html>
