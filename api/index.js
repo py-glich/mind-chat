@@ -460,6 +460,17 @@ app.post('/api/integrations/woocommerce/webhook', (req, res) => {
   res.json({ success: true, synced_order: formatted });
 });
 
+// Catch-all route handler so unmatched requests return clean JSON instead of hanging
+app.all('*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    error: 'ENDPOINT_NOT_FOUND',
+    method: req.method,
+    url: req.url,
+    originalUrl: req.originalUrl
+  });
+});
+
 // Global error handler so requests never hang in serverless
 app.use((err, req, res, next) => {
   console.error('Unhandled server error:', err);
