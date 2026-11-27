@@ -1014,7 +1014,7 @@
           <div class="instruction-step" style="margin-top:1rem;">
             <div class="step-num-badge">5</div>
             <div class="step-content">
-              <strong>Order & Inventory Database Access:</strong> The bot accesses orders and catalog inventory directly through Shopify webhooks (<code>orders/create</code>, <code>inventory_levels/update</code>) at <code>http://localhost:3000/api/integrations/shopify/webhook</code>.
+              <strong>Order & Inventory Database Access:</strong> The bot accesses orders and catalog inventory directly through Shopify webhooks (<code>orders/create</code>, <code>inventory_levels/update</code>) at <code id="wizard-webhook-shopify">https://mind-chat-323j.vercel.app/api/integrations/shopify/webhook</code>.
             </div>
           </div>
         </div>
@@ -1050,7 +1050,7 @@ add_action('wp_footer', function() {
           <div class="instruction-step" style="margin-top:1rem;">
             <div class="step-num-badge">4</div>
             <div class="step-content">
-              <strong>WooCommerce Database Sync:</strong> Sync WooCommerce orders and products by setting your webhook URL in <strong>WooCommerce → Settings → Advanced → Webhooks</strong> to <code>http://localhost:3000/api/integrations/woocommerce/webhook</code>.
+              <strong>WooCommerce Database Sync:</strong> Sync WooCommerce orders and products by setting your webhook URL in <strong>WooCommerce → Settings → Advanced → Webhooks</strong> to <code id="wizard-webhook-wp">https://mind-chat-323j.vercel.app/api/integrations/woocommerce/webhook</code>.
             </div>
           </div>
         </div>
@@ -1124,7 +1124,7 @@ add_action('wp_footer', function() {
   </div>
 
   <!-- Embed Standalone Chat Widget -->
-  <script src="/widget.js?v=2.2.0" data-theme="black"></script>
-  <script src="/js/app.js?v=2.2.0"></script>
+  <script src="/widget.js?v=2.3.0" data-theme="black"></script>
+  <script src="/js/app.js?v=2.3.0"></script>
 </body>
 </html>

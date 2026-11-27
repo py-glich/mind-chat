@@ -1017,6 +1017,12 @@ add_action('wp_footer', function() {
       dbEndpointInput.value = `${origin}/api/database`;
     }
 
+    const whShopify = document.getElementById('wizard-webhook-shopify');
+    if (whShopify) whShopify.textContent = `${origin}/api/integrations/shopify/webhook`;
+
+    const whWp = document.getElementById('wizard-webhook-wp');
+    if (whWp) whWp.textContent = `${origin}/api/integrations/woocommerce/webhook`;
+
     const titleEl = document.getElementById('wizard-instructions-title');
     const subEl = document.getElementById('wizard-instructions-sub');
     if (isShopify) {
@@ -1170,52 +1176,53 @@ print("SQL Ran:", data['dbQuery'])`;
 
     const filenameEl = document.getElementById('wizard-api-filename');
     const codeEl = document.getElementById('wizard-api-code');
+    const origin = window.location.origin;
 
     if (lang === 'curl') {
       if (filenameEl) filenameEl.textContent = 'cURL Terminal';
-      if (codeEl) codeEl.textContent = `curl -X POST http://localhost:3000/api/chat/message \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "message": "Where is order #1042?",
-    "customer": { "name": "Jane Doe", "email": "jane@example.com" }
-  }'`;
+      if (codeEl) codeEl.textContent = `curl -X POST ${origin}/api/chat/message \\\n  -H "Content-Type: application/json" \\\n  -d '{\n    "message": "Where is order #1042?",\n    "customer": { "name": "Jane Doe", "email": "jane@example.com" }\n  }'`;
     } else if (lang === 'js') {
       if (filenameEl) filenameEl.textContent = 'JavaScript (Fetch)';
-      if (codeEl) codeEl.textContent = `// Query Bot & Live Database
-const response = await fetch('http://localhost:3000/api/chat/message', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    message: 'Where is order #1042?',
-    customer: { name: 'Jane Doe', email: 'jane@example.com' }
-  })
-});
-const result = await response.json();
-console.log(result.reply, result.dbQuery);`;
+      if (codeEl) codeEl.textContent = `// Query Bot & Live Database\nconst response = await fetch('${origin}/api/chat/message', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({\n    message: 'Where is order #1042?',\n    customer: { name: 'Jane Doe', email: 'jane@example.com' }\n  })\n});\nconst result = await response.json();\nconsole.log(result.reply, result.dbQuery);`;
     } else if (lang === 'python') {
       if (filenameEl) filenameEl.textContent = 'Python (requests)';
-      if (codeEl) codeEl.textContent = `import requests
-
-r = requests.post('http://localhost:3000/api/chat/message', json={
-    'message': 'Where is order #1042?',
-    'customer': {'name': 'Jane Doe', 'email': 'jane@example.com'}
-})
-print(r.json())`;
+      if (codeEl) codeEl.textContent = `import requests\n\nr = requests.post('${origin}/api/chat/message', json={\n    'message': 'Where is order #1042?',\n    'customer': {'name': 'Jane Doe', 'email': 'jane@example.com'}\n})\nprint(r.json())`;
     }
+  },
+
+  copyCode(elementId) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    const text = el.textContent || el.innerText || '';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text.trim())
+        .then(() => alert('Snippet copied to clipboard!'))
+        .catch(() => this.fallbackCopy(text));
+    } else {
+      this.fallbackCopy(text);
+    }
+  },
+
+  fallbackCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      alert('Snippet copied to clipboard!');
+    } catch (e) {
+      alert('Please copy manually');
+    }
+    document.body.removeChild(ta);
   },
 
   copyActiveApiSnippet() {
-    const el = document.getElementById('code-api-snippet');
-    if (el) {
-      navigator.clipboard.writeText(el.textContent.trim()).then(() => alert('API code copied to clipboard!'));
-    }
+    this.copyCode('code-api-snippet');
   },
 
   copyWizardApiCode() {
-    const el = document.getElementById('wizard-api-code');
-    if (el) {
-      navigator.clipboard.writeText(el.textContent.trim()).then(() => alert('API code copied to clipboard!'));
-    }
+    this.copyCode('wizard-api-code');
   },
 
   async finishCreateBot() {
