@@ -172,6 +172,7 @@ a {
   display: flex;
   align-items: center;
   gap: 0.35rem;
+  white-space: nowrap;
 }
 
 .nav-item:hover {
@@ -931,6 +932,7 @@ a {
   align-items: center;
   gap: 0.5rem;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .btn-new-bot-glow:hover {

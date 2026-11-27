@@ -246,7 +246,7 @@ const app = {
           <div class="bot-stack-card-footer">
             <div class="bot-status-pill">
               <span class="bot-status-dot"></span>
-              <span>🟢 Connected & Active</span>
+              <span>Connected & Active</span>
             </div>
             <button class="bot-open-btn" onclick="event.stopPropagation(); app.openBotDetail('${b.id}')">
               <span>Open Studio</span>
