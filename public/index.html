@@ -815,26 +815,40 @@
 
       <!-- Star Speech Bubble -->
       <div class="star-speech-bubble" id="star-speech-text">
-        Hi there! ✨ I'm your RuleMind Architect. Let's create your new custom bot together!
+        Hi there! ✨ I'm your RuleMind Architect. Let's create your new database-powered bot together!
       </div>
 
-      <!-- STEP 1: Decide Name of Bot & Purpose of Bot -->
+      <!-- STEP 1: Decide Name of Bot -->
       <div class="wizard-step active" id="star-step-1">
         <div style="font-weight:700; font-size:1.15rem; color:#fff; margin-bottom:0.35rem;">
-          Step 1: Bot Name & Purpose
+          Step 1: Decide Bot Name
+        </div>
+        <div style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1.5rem;">
+          Give your bot a name for your store and customer chat widget:
+        </div>
+
+        <div style="margin-bottom:2rem;">
+          <label class="auth-label">Bot Name</label>
+          <input type="text" id="wizard-bot-name" class="auth-input" value="Apex Minimalist Assistant" placeholder="e.g. Apex Store Concierge" style="font-size:1.05rem; padding:0.85rem 1rem;">
+        </div>
+
+        <div style="display:flex; justify-content:flex-end;">
+          <button class="btn-pill btn-pill-primary" onclick="app.nextWizardStep(2)">Next: Website Purpose & Questions →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: What is the purpose of your bot & Questions about website -->
+      <div class="wizard-step" id="star-step-2">
+        <div style="font-weight:700; font-size:1.15rem; color:#fff; margin-bottom:0.35rem;">
+          Step 2: Bot Purpose & Questions About Your Website
         </div>
         <div style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1.25rem;">
-          Give your bot a name and define its primary operational objective:
+          What is the purpose of your bot, and what basic questions about your website should it answer using your database?
         </div>
 
         <div style="margin-bottom:1.25rem;">
-          <label class="auth-label">Bot Name</label>
-          <input type="text" id="wizard-bot-name" class="auth-input" value="Apex Minimalist Assistant" placeholder="e.g. Apex Store Concierge">
-        </div>
-
-        <div style="margin-bottom:1.25rem;">
-          <label class="auth-label">What is the purpose of your bot?</label>
-          <div class="store-option-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom:1rem;">
+          <label class="auth-label">Primary Operational Purpose</label>
+          <div class="store-option-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom:0.75rem;">
             <div class="store-option-card selected" onclick="app.selectWizardPurpose('Order Tracking, Stock Check & Customer Service', this)">
               <div class="store-option-icon">📦</div>
               <div style="font-weight:700; font-size:0.9rem;">Order & Shipping Desk</div>
@@ -856,25 +870,81 @@
           <input type="text" id="wizard-bot-purpose" class="auth-input" value="Order Tracking, Stock Check & Customer Service" placeholder="Or type a custom bot purpose...">
         </div>
 
-        <div style="display:flex; justify-content:flex-end;">
-          <button class="btn-pill btn-pill-primary" onclick="app.nextWizardStep(2)">Next: Platform Integration →</button>
+        <!-- Built-in Database Knowledge -->
+        <div style="background:#09090e; border:1px solid #1e1e2c; border-radius:var(--radius-sm); padding:1rem; margin-bottom:1.5rem;">
+          <div style="font-size:0.8rem; font-weight:700; color:#fff; margin-bottom:0.6rem;">
+            ⚡ Basic Website Questions Answered Directly Using Database:
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.6rem; font-size:0.75rem; color:var(--text-secondary);">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="color:#10b981;">✓</span> <span><strong>Order Tracking:</strong> "Where is order #1042?"</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="color:#10b981;">✓</span> <span><strong>Live Inventory:</strong> "Is stealth keycaps in stock?"</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="color:#10b981;">✓</span> <span><strong>Return Policy:</strong> 30-day store guarantee rules</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="color:#10b981;">✓</span> <span><strong>Shipping & Delivery:</strong> Live courier lookup & transit times</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between;">
+          <button class="btn-pill btn-pill-secondary" onclick="app.prevWizardStep(1)">← Back</button>
+          <button class="btn-pill btn-pill-primary" onclick="app.nextWizardStep(3)">Next: Custom Q&A & Fallback →</button>
         </div>
       </div>
 
-      <!-- STEP 2: Which type of website you want to integrate -->
-      <div class="wizard-step" id="star-step-2">
+      <!-- STEP 3: Extra Questions & Unknown Question Fallback -->
+      <div class="wizard-step" id="star-step-3">
         <div style="font-weight:700; font-size:1.15rem; color:#fff; margin-bottom:0.35rem;">
-          Step 2: Which type of website do you want to integrate?
+          Step 3: Extra Questions & Unknown Response
         </div>
         <div style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1.25rem;">
-          Select your platform to configure live database hooks and access methods:
+          Add extra questions you want your bot to answer, and decide what to display when a customer asks a question it does not know:
+        </div>
+
+        <!-- Dynamic Q&A List -->
+        <label class="auth-label">Extra Questions & Exact Answers</label>
+        <div id="wizard-qa-container" class="wizard-qa-repeater">
+          <!-- Rows dynamically added -->
+        </div>
+
+        <button type="button" class="btn-pill btn-pill-secondary" style="font-size:0.8rem; margin-bottom:1.25rem;" onclick="app.addWizardQARow()">
+          + Add Another Question & Answer
+        </button>
+
+        <div style="margin-bottom:1.25rem;">
+          <label class="auth-label">What should the bot display when user asks a question it doesn't know?</label>
+          <textarea id="wizard-bot-fallback" class="auth-input" rows="2">I'm sorry, I don't have an exact answer for that yet. Would you like me to look up an order in our store database or connect you to our support specialist?</textarea>
+        </div>
+
+        <div style="background:#09090d; border:1px solid #1f1f2e; border-radius:var(--radius-sm); padding:0.85rem; font-size:0.78rem; color:var(--text-secondary); margin-bottom:1.5rem;">
+          💡 <strong>Automatic Logging:</strong> Every time this fallback triggers, the customer's question is logged in your <strong>Unanswered Questions Log</strong> so you can add an answer with 1 click.
+        </div>
+
+        <div style="display:flex; justify-content:space-between;">
+          <button class="btn-pill btn-pill-secondary" onclick="app.prevWizardStep(2)">← Back</button>
+          <button class="btn-pill btn-pill-primary" onclick="app.nextWizardStep(4)">Next: Which Platform to Integrate →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: Which Platform to Integrate (Where to Plug the Bot In) -->
+      <div class="wizard-step" id="star-step-4">
+        <div style="font-weight:700; font-size:1.15rem; color:#fff; margin-bottom:0.35rem;">
+          Step 4: Which Platform Do You Want to Integrate?
+        </div>
+        <div style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1.25rem;">
+          Where do you want to plug this bot in?
         </div>
 
         <div class="store-option-grid">
           <div class="store-option-card selected" onclick="app.selectWizardPlatform('Shopify', this)">
             <div class="store-option-icon">🛍️</div>
             <div style="font-weight:700; font-size:1.05rem;">Shopify Storefront</div>
-            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:6px;">Plug into <code>theme.liquid</code> with automated order sync</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:6px;">Plug into <code>theme.liquid</code> with automated order & inventory sync</div>
           </div>
 
           <div class="store-option-card" onclick="app.selectWizardPlatform('WordPress', this)">
@@ -891,56 +961,8 @@
         </div>
 
         <div style="margin-top:2rem; display:flex; justify-content:space-between;">
-          <button class="btn-pill btn-pill-secondary" onclick="app.prevWizardStep(1)">← Back</button>
-          <button class="btn-pill btn-pill-primary" onclick="app.nextWizardStep(3)">Next: Custom Questions →</button>
-        </div>
-      </div>
-
-      <!-- STEP 3: Add extra questions you want your bot should answer -->
-      <div class="wizard-step" id="star-step-3">
-        <div style="font-weight:700; font-size:1.15rem; color:#fff; margin-bottom:0.35rem;">
-          Step 3: Add Custom Questions & Answers
-        </div>
-        <div style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1.25rem;">
-          Teach your bot extra questions and exact answers specific to your store:
-        </div>
-
-        <!-- Dynamic Q&A List -->
-        <div id="wizard-qa-container" class="wizard-qa-repeater">
-          <!-- Rows dynamically added -->
-        </div>
-
-        <button type="button" class="btn-pill btn-pill-secondary" style="font-size:0.8rem; margin-bottom:1.5rem;" onclick="app.addWizardQARow()">
-          + Add Another Question & Answer
-        </button>
-
-        <div style="display:flex; justify-content:space-between;">
-          <button class="btn-pill btn-pill-secondary" onclick="app.prevWizardStep(2)">← Back</button>
-          <button class="btn-pill btn-pill-primary" onclick="app.nextWizardStep(4)">Next: Fallback Answer →</button>
-        </div>
-      </div>
-
-      <!-- STEP 4: What to display when user asks a question the bot does not know -->
-      <div class="wizard-step" id="star-step-4">
-        <div style="font-weight:700; font-size:1.15rem; color:#fff; margin-bottom:0.35rem;">
-          Step 4: Unknown Question Fallback Response
-        </div>
-        <div style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1.25rem;">
-          What should the bot display when a shopper asks a question it does not know?
-        </div>
-
-        <div style="margin-bottom:1.25rem;">
-          <label class="auth-label">Fallback Message Template</label>
-          <textarea id="wizard-bot-fallback" class="auth-input" rows="3">I'm sorry, I don't have an exact answer for that yet. Would you like me to look up an order in our store database or connect you to our support specialist?</textarea>
-        </div>
-
-        <div style="background:#09090d; border:1px solid #1f1f2e; border-radius:var(--radius-sm); padding:1rem; font-size:0.8rem; color:var(--text-secondary); margin-bottom:1.5rem;">
-          💡 <strong>Automatic Logging:</strong> Every time this fallback is triggered, the shopper's question is automatically logged in your <strong>Unanswered Questions Log</strong> so you can add an answer with 1 click.
-        </div>
-
-        <div style="display:flex; justify-content:space-between;">
           <button class="btn-pill btn-pill-secondary" onclick="app.prevWizardStep(3)">← Back</button>
-          <button class="btn-pill btn-pill-primary" onclick="app.nextWizardStep(5)">Next: Step-by-Step Integration →</button>
+          <button class="btn-pill btn-pill-primary" onclick="app.nextWizardStep(5)">Next: Step-by-Step Instructions →</button>
         </div>
       </div>
 
@@ -1102,7 +1124,7 @@ add_action('wp_footer', function() {
   </div>
 
   <!-- Embed Standalone Chat Widget -->
-  <script src="/widget.js?v=2.1.0" data-theme="black"></script>
-  <script src="/js/app.js?v=2.1.0"></script>
+  <script src="/widget.js?v=2.2.0" data-theme="black"></script>
+  <script src="/js/app.js?v=2.2.0"></script>
 </body>
 </html>

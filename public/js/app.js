@@ -920,7 +920,7 @@ add_action('wp_footer', function() {
       this.addWizardQARow('What materials are used for the keycaps?', 'Our keycaps are crafted from thick double-shot PBT plastic with stealth dark legends.');
     }
 
-    this.setStarSpeech("Hi there! ✨ I'm your RuleMind Architect. Let's create your new database-powered bot together! First, what is your bot's name and purpose?");
+    this.setStarSpeech("Hi there! ✨ I'm your RuleMind Architect. Let's create your new database-powered bot together! First, what is your bot's name?");
     this.showWizardStep(1);
   },
 
@@ -948,13 +948,13 @@ add_action('wp_footer', function() {
     this.wizardData.botPurpose = purpose;
     const input = document.getElementById('wizard-bot-purpose');
     if (input) input.value = purpose;
-    document.querySelectorAll('#star-step-1 .store-option-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('#star-step-2 .store-option-card').forEach(c => c.classList.remove('selected'));
     if (el) el.classList.add('selected');
   },
 
   selectWizardPlatform(platform, el) {
     this.wizardData.platform = platform;
-    document.querySelectorAll('#star-step-2 .store-option-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('#star-step-4 .store-option-card').forEach(c => c.classList.remove('selected'));
     if (el) el.classList.add('selected');
 
     const badge = document.getElementById('wizard-platform-badge');
@@ -990,6 +990,33 @@ add_action('wp_footer', function() {
     if (pWp) pWp.style.display = isWp ? 'block' : 'none';
     if (pCustom) pCustom.style.display = isCustom ? 'block' : 'none';
 
+    const origin = window.location.origin;
+
+    const shopifyCode = document.getElementById('wizard-code-shopify');
+    if (shopifyCode) {
+      shopifyCode.textContent = `<!-- RuleMind Bot Integration for Shopify -->\n<script src="${origin}/widget.js"\n  data-server="${origin}"\n  data-source="Shopify Storefront"\n  data-customer-email="{{ customer.email }}"\n  data-customer-name="{{ customer.name }}"\n  async></script>`;
+    }
+
+    const wpCode = document.getElementById('wizard-code-wp');
+    if (wpCode) {
+      wpCode.textContent = `// RuleMind Bot Integration for WordPress / WooCommerce\nadd_action('wp_footer', function() {\n  ?>\n  <script src="${origin}/widget.js" \n          data-server="${origin}" \n          data-source="WordPress / WooCommerce" \n          async></script>\n  <?php\n});`;
+    }
+
+    const customCode = document.getElementById('wizard-code-custom');
+    if (customCode) {
+      customCode.textContent = `<script src="${origin}/widget.js" \n        data-server="${origin}" \n        data-theme="black" \n        async></script>`;
+    }
+
+    const apiCode = document.getElementById('wizard-api-code');
+    if (apiCode) {
+      apiCode.textContent = `curl -X POST ${origin}/api/chat/message \\\n  -H "Content-Type: application/json" \\\n  -d '{\n    "message": "Where is order #1042?",\n    "customer": { "name": "Jane Doe", "email": "jane@example.com" }\n  }'`;
+    }
+
+    const dbEndpointInput = document.getElementById('wizard-db-endpoint');
+    if (dbEndpointInput) {
+      dbEndpointInput.value = `${origin}/api/database`;
+    }
+
     const titleEl = document.getElementById('wizard-instructions-title');
     const subEl = document.getElementById('wizard-instructions-sub');
     if (isShopify) {
@@ -1007,14 +1034,14 @@ add_action('wp_footer', function() {
   nextWizardStep(stepNum) {
     if (stepNum === 2) {
       const nameInput = document.getElementById('wizard-bot-name');
-      const purposeInput = document.getElementById('wizard-bot-purpose');
       this.wizardData.botName = (nameInput && nameInput.value.trim()) || 'Apex Assistant';
-      this.wizardData.botPurpose = (purposeInput && purposeInput.value.trim()) || 'Order Tracking & Support';
-      this.setStarSpeech(`Great choice! 🛍️ Which platform do you want to plug "${this.wizardData.botName}" into?`);
+      this.setStarSpeech(`"${this.wizardData.botName}" is a great name! 🎯 Now, what is the purpose of this bot, and what questions about your website should it answer using the database?`);
     } else if (stepNum === 3) {
-      this.setStarSpeech(`Let's teach "${this.wizardData.botName}" some extra questions and exact answers for your shoppers!`);
+      const purposeInput = document.getElementById('wizard-bot-purpose');
+      this.wizardData.botPurpose = (purposeInput && purposeInput.value.trim()) || 'Order Tracking, Stock Check & Customer Service';
+      this.setStarSpeech(`Let's add any extra questions & answers for your store, and decide what to display when a question isn't known yet! 💬`);
     } else if (stepNum === 4) {
-      // Gather Q&As
+      // Gather Q&As and Fallback
       this.wizardData.customQA = [];
       document.querySelectorAll('#wizard-qa-container .wizard-qa-row').forEach(row => {
         const q = row.querySelector('.input-qa-q').value.trim();
@@ -1023,25 +1050,25 @@ add_action('wp_footer', function() {
           this.wizardData.customQA.push({ question: q, answer: a });
         }
       });
-      this.setStarSpeech(`Now decide: what should "${this.wizardData.botName}" display when a shopper asks a question it doesn't know?`);
-    } else if (stepNum === 5) {
       const fbInput = document.getElementById('wizard-bot-fallback');
       this.wizardData.fallbackMessage = (fbInput && fbInput.value.trim()) || "I'm sorry, I don't have an exact answer for that yet.";
+      this.setStarSpeech(`Where would you like to plug "${this.wizardData.botName}" in? Choose your website platform! 🔌`);
+    } else if (stepNum === 5) {
       this.updateWizardPlatformView();
-      this.setStarSpeech(`Here is your step-by-step guide to plug "${this.wizardData.botName}" into ${this.wizardData.platform}!`);
+      this.setStarSpeech(`Here are your exact step-by-step instructions to plug "${this.wizardData.botName}" into ${this.wizardData.platform} with database access! 🚀`);
     }
     this.showWizardStep(stepNum);
   },
 
   prevWizardStep(stepNum) {
     if (stepNum === 1) {
-      this.setStarSpeech("Step 1: Decide the name and purpose of your bot. ✨");
+      this.setStarSpeech("Step 1: Decide the name of your bot. ✨");
     } else if (stepNum === 2) {
-      this.setStarSpeech(`Which website platform do you want to integrate with? 🔌`);
+      this.setStarSpeech(`What is the purpose of "${this.wizardData.botName}", and what website questions should it answer? 📦`);
     } else if (stepNum === 3) {
-      this.setStarSpeech("Teach your bot extra questions and answers for your store! 💬");
+      this.setStarSpeech("Teach your bot extra questions and fallback answers for your store! 💬");
     } else if (stepNum === 4) {
-      this.setStarSpeech("What should your bot say when an answer is not known? ❓");
+      this.setStarSpeech("Which website platform do you want to integrate with? 🔌");
     }
     this.showWizardStep(stepNum);
   },
