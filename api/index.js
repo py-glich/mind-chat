@@ -1,7 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
+const uuidv4 = () => crypto.randomUUID();
 const db = require('./db');
 const RuleEngine = require('./ruleEngine');
 
@@ -461,7 +462,7 @@ app.post('/api/integrations/woocommerce/webhook', (req, res) => {
 });
 
 // Catch-all route handler so unmatched requests return clean JSON instead of hanging
-app.all('*', (req, res) => {
+app.use((req, res) => {
   res.status(404).json({
     success: false,
     error: 'ENDPOINT_NOT_FOUND',

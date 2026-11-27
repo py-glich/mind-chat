@@ -363,6 +363,80 @@
   ],
   "conversations": [
     {
+      "id": "conv-ab881899",
+      "bot_id": "bot-default",
+      "source": "web",
+      "customer": {
+        "name": "Store Visitor",
+        "email": "visitor@guest.com",
+        "ip": "::1"
+      },
+      "context": {
+        "awaiting": null,
+        "human_takeover": false,
+        "botId": "bot-default",
+        "active_order_id": "1042"
+      },
+      "messages": [
+        {
+          "id": "msg-29728255",
+          "sender": "user",
+          "text": "Where is order #1042?",
+          "timestamp": "2026-11-27T09:44:07.048Z"
+        },
+        {
+          "id": "msg-7562b867",
+          "sender": "bot",
+          "text": "📦 **Order #1042 Found!**\n\n• **Customer:** Jane Doe\n• **Status:** Out for Delivery\n• **Carrier:** FedEx Home Delivery\n• **Tracking Number:** `FX-982194821`\n• **Estimated Delivery:** Today by 5:30 PM\n• **Total:** $108.00\n\n**Items Ordered:**\n  • 1x Minimalist Matte Black Desk Mat ($39.00)\n  • 1x Stealth Black PBT Keycaps Set ($69.00)\n\nNeed to change shipping address or report an issue?",
+          "matchedRule": {
+            "id": "rule-order-track",
+            "name": "Order Tracking & Status",
+            "action_type": "CHECK_ORDER"
+          },
+          "dbActionExecuted": true,
+          "dbQuery": "SELECT * FROM orders WHERE order_id = '1042' OR customer_email = 'jane@example.com'",
+          "richCard": {
+            "type": "order",
+            "data": {
+              "order_id": "1042",
+              "customer_name": "Jane Doe",
+              "customer_email": "jane@example.com",
+              "source": "Shopify",
+              "status": "Out for Delivery",
+              "carrier": "FedEx Home Delivery",
+              "tracking_code": "FX-982194821",
+              "estimated_delivery": "Today by 5:30 PM",
+              "total_price": 108,
+              "currency": "USD",
+              "items": [
+                {
+                  "title": "Minimalist Matte Black Desk Mat",
+                  "qty": 1,
+                  "price": 39
+                },
+                {
+                  "title": "Stealth Black PBT Keycaps Set",
+                  "qty": 1,
+                  "price": 69
+                }
+              ],
+              "created_at": "2026-11-23T10:15:00Z",
+              "shipping_address": "742 Evergreen Terrace, Springfield, OR"
+            }
+          },
+          "quickReplies": [
+            "Return Policy",
+            "Speak to Agent",
+            "Track Another Order"
+          ],
+          "timestamp": "2026-11-27T09:44:07.052Z"
+        }
+      ],
+      "status": "active",
+      "created_at": "2026-11-27T09:44:07.048Z",
+      "updated_at": "2026-11-27T09:44:07.052Z"
+    },
+    {
       "id": "conv-e4efed55",
       "bot_id": "bot-default",
       "source": "web",
