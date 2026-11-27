@@ -44,21 +44,22 @@
       width: 58px;
       height: 58px;
       border-radius: 50%;
-      background: #000000;
+      background: #090a14;
       color: #ffffff;
-      border: 1px solid #33333e;
+      border: 1px solid rgba(139, 92, 246, 0.35);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7), 0 0 15px rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 18px rgba(99, 102, 241, 0.25);
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
     }
 
     .rm-launcher:hover {
-      transform: scale(1.05);
-      border-color: #555566;
+      transform: scale(1.06);
+      border-color: rgba(168, 85, 247, 0.6);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9), 0 0 25px rgba(99, 102, 241, 0.45);
     }
 
     .rm-launcher-icon {
@@ -79,7 +80,7 @@
       width: 12px;
       height: 12px;
       background: #10b981;
-      border: 2px solid #000000;
+      border: 2px solid #090a14;
       border-radius: 50%;
       box-shadow: 0 0 8px #10b981;
     }
@@ -93,13 +94,13 @@
       height: 560px;
       max-width: calc(100vw - 32px);
       max-height: calc(100vh - 110px);
-      background: #09090c;
-      border: 1px solid #272730;
+      background: #090a14;
+      border: 1px solid rgba(139, 92, 246, 0.25);
       border-radius: 16px;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 30px rgba(99, 102, 241, 0.15);
       opacity: 0;
       transform: translateY(12px) scale(0.97);
       pointer-events: none;
@@ -115,8 +116,8 @@
     /* Header */
     .rm-header {
       padding: 14px 18px;
-      background: #111116;
-      border-bottom: 1px solid #22222a;
+      background: #0e1020;
+      border-bottom: 1px solid rgba(139, 92, 246, 0.2);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -132,8 +133,9 @@
       width: 32px;
       height: 32px;
       border-radius: 8px;
-      background: #ffffff;
-      color: #000000;
+      background: linear-gradient(135deg, #4338ca 0%, #7c3aed 100%);
+      color: #ffffff;
+      border: 1px solid rgba(168, 85, 247, 0.35);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -150,7 +152,7 @@
 
     .rm-subtitle {
       font-size: 11px;
-      color: #10b981;
+      color: #a5b4fc;
       display: flex;
       align-items: center;
       gap: 4px;
@@ -159,7 +161,7 @@
     .rm-close-btn {
       background: transparent;
       border: none;
-      color: #71717a;
+      color: #94a3b8;
       cursor: pointer;
       font-size: 18px;
       padding: 4px;
@@ -171,7 +173,7 @@
 
     .rm-close-btn:hover {
       color: #ffffff;
-      background: #22222a;
+      background: #1e2038;
     }
 
     /* Message Body */
@@ -182,7 +184,7 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      background: #09090c;
+      background: #07070d;
     }
 
     .rm-msg {
@@ -200,20 +202,21 @@
 
     .rm-msg.user {
       align-self: flex-end;
-      background: #272732;
+      background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%);
       color: #ffffff;
       padding: 10px 14px;
       border-radius: 14px 14px 2px 14px;
-      border: 1px solid #383844;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
     }
 
     .rm-msg.bot {
       align-self: flex-start;
-      background: #14141a;
-      color: #e4e4e7;
+      background: #0f1022;
+      color: #e2e8f0;
       padding: 12px 14px;
       border-radius: 14px 14px 14px 2px;
-      border: 1px solid #23232c;
+      border: 1px solid rgba(139, 92, 246, 0.2);
     }
 
     .rm-msg.agent {
@@ -227,7 +230,7 @@
 
     .rm-rule-badge {
       font-size: 10px;
-      color: #10b981;
+      color: #a5b4fc;
       margin-top: 6px;
       display: flex;
       align-items: center;
@@ -237,8 +240,8 @@
 
     /* Cards */
     .rm-card {
-      background: #0d0d12;
-      border: 1px solid #2c2c38;
+      background: #0c0d18;
+      border: 1px solid rgba(139, 92, 246, 0.22);
       border-radius: 10px;
       padding: 12px;
       margin-top: 8px;
@@ -272,9 +275,9 @@
     }
 
     .rm-chip {
-      background: #181822;
-      border: 1px solid #2c2c3a;
-      color: #d1d5db;
+      background: #121428;
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      color: #cbd5e1;
       font-size: 11px;
       padding: 5px 10px;
       border-radius: 20px;
@@ -283,16 +286,16 @@
     }
 
     .rm-chip:hover {
-      background: #252535;
+      background: #1a1d38;
       color: #ffffff;
-      border-color: #555566;
+      border-color: rgba(168, 85, 247, 0.45);
     }
 
     /* Footer Input */
     .rm-footer {
       padding: 12px;
-      background: #111116;
-      border-top: 1px solid #22222a;
+      background: #0e1020;
+      border-top: 1px solid rgba(139, 92, 246, 0.18);
       display: flex;
       align-items: center;
       gap: 8px;
@@ -300,8 +303,8 @@
 
     .rm-input {
       flex: 1;
-      background: #060608;
-      border: 1px solid #282834;
+      background: #070812;
+      border: 1px solid rgba(139, 92, 246, 0.22);
       border-radius: 8px;
       padding: 10px 12px;
       color: #ffffff;
@@ -311,32 +314,34 @@
 
     .rm-input:focus {
       outline: none;
-      border-color: #555566;
+      border-color: #818cf8;
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.18);
     }
 
     .rm-send-btn {
-      background: #ffffff;
-      color: #000000;
-      border: none;
+      background: linear-gradient(135deg, #4338ca 0%, #6366f1 50%, #7c3aed 100%);
+      color: #ffffff;
+      border: 1px solid rgba(168, 85, 247, 0.3);
       border-radius: 8px;
       padding: 10px 14px;
       font-weight: 600;
       font-size: 12px;
       cursor: pointer;
-      transition: background 0.15s ease;
+      transition: all 0.15s ease;
     }
 
     .rm-send-btn:hover {
-      background: #e2e2e8;
+      filter: brightness(1.1);
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.35);
     }
 
     .rm-watermark {
       text-align: center;
       font-size: 10px;
-      color: #52525b;
+      color: #818cf8;
       padding: 4px;
-      background: #111116;
-      border-top: 1px solid #1a1a20;
+      background: #0b0c18;
+      border-top: 1px solid rgba(139, 92, 246, 0.15);
     }
   `;
   document.head.appendChild(style);
