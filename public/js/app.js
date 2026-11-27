@@ -586,7 +586,7 @@ const app = {
             <div class="instruction-step">
               <div class="step-num-badge">2</div>
               <div class="step-content">
-                Next to your active theme, click the <strong>`...`</strong> (Actions) button and select <strong>Edit code</strong>.
+                Next to your active theme, click the <strong>&quot;...&quot;</strong> (Actions) button and select <strong>Edit code</strong>.
               </div>
             </div>
 
