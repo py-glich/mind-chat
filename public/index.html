@@ -353,13 +353,17 @@
       </div>
 
       <div class="video-showcase-frame">
-        <video autoplay loop muted playsinline poster="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80">
-          <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+        <video id="hero-demo-video" autoplay loop muted playsinline poster="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80">
+          <source src="https://cdn.coverr.co/videos/coverr-analyzing-data-on-a-computer-screen-5412/1080p.mp4" type="video/mp4">
         </video>
+        <div class="video-controls-overlay">
+          <button class="video-ctrl-btn" onclick="app.toggleVideoPlay()" id="btn-video-play">❚❚ Pause</button>
+          <button class="video-ctrl-btn" onclick="app.toggleVideoMute()" id="btn-video-mute">🔇 Unmute</button>
+        </div>
         <div class="video-overlay-banner">
           <div>
             <div class="video-badge">
-              <span class="video-live-dot"></span> LIVE DEMO WALKTHROUGH
+              <span class="video-live-dot"></span> LIVE TELEMETRY • DIRECT STORE PIPELINE
             </div>
             <h3 style="font-size:1.35rem; color:#fff; font-weight:700;">Deterministic Database Query Pipeline</h3>
             <p style="font-size:0.85rem; color:var(--text-secondary); max-width:560px; margin-top:0.25rem;">
@@ -369,6 +373,60 @@
           <button class="btn-pill btn-pill-primary" onclick="app.triggerDemoChat()" style="white-space:nowrap;">
             Launch Interactive Widget →
           </button>
+        </div>
+      </div>
+
+      <!-- Interactive Live Deterministic Query Sandbox -->
+      <div class="query-sim-box">
+        <div class="query-sim-head">
+          <div>
+            <div style="font-size:0.75rem; font-weight:700; color:#818cf8; text-transform:uppercase; letter-spacing:0.05em;">Interactive Pipeline Test</div>
+            <div style="font-size:1.1rem; font-weight:700; color:#fff; margin-top:2px;">Test Real Database Execution Against Live Rules</div>
+          </div>
+          <div class="query-sim-buttons">
+            <button class="query-sim-btn active" onclick="app.runQuerySim('order', this)">📦 Track Order #1042</button>
+            <button class="query-sim-btn" onclick="app.runQuerySim('stock', this)">🏷️ Check Stock SKU-002</button>
+            <button class="query-sim-btn" onclick="app.runQuerySim('policy', this)">🛡️ Return Guarantee Rule</button>
+          </div>
+        </div>
+
+        <div class="query-sim-grid">
+          <!-- Terminal SQL Execution -->
+          <div class="query-sim-panel" id="sim-terminal">
+            <div class="query-sim-panel-title">
+              <span>STOREFRONT QUERY PIPELINE</span>
+              <span style="color:#10b981;" id="sim-status-badge">⚡ 38ms EXECUTION</span>
+            </div>
+            <div id="sim-terminal-body" style="line-height:1.6;">
+              <span style="color:#64748b;">// 1. Incoming shopper prompt:</span><br>
+              <span style="color:#fff;">"Where is my order #1042?"</span><br><br>
+              <span style="color:#64748b;">// 2. Deterministic SQL Query executed:</span><br>
+              <span class="sim-sql-kw">SELECT</span> id, status, carrier, tracking_number, total_usd<br>
+              <span class="sim-sql-kw">FROM</span> orders <br>
+              <span class="sim-sql-kw">WHERE</span> order_number = <span class="sim-sql-str">'1042'</span> <span class="sim-sql-kw">AND</span> customer_id = <span class="sim-sql-str">'cust_992'</span>;
+            </div>
+          </div>
+
+          <!-- Deterministic Result Card -->
+          <div class="query-sim-panel" id="sim-result" style="background:#090a14; border-color:#212440;">
+            <div class="query-sim-panel-title">
+              <span>RAW DATABASE JSON RESPONSE</span>
+              <span style="color:#818cf8;">STATUS 200 OK</span>
+            </div>
+            <pre id="sim-json-body" style="color:#38bdf8; font-size:0.75rem; margin:0; line-height:1.5;">{
+  "order_id": 1042,
+  "customer": "Jane Doe",
+  "status": "out_for_delivery",
+  "carrier": "FedEx Express",
+  "tracking": "FX-982194821",
+  "items": [
+    { "name": "Minimalist Matte Black Desk Mat", "qty": 1, "price": 48.00 },
+    { "name": "Stealth Black PBT Keycaps Set", "qty": 1, "price": 60.00 }
+  ],
+  "total": 108.00,
+  "eta": "Today by 5:30 PM"
+}</pre>
+          </div>
         </div>
       </div>
     </section>
@@ -900,29 +958,48 @@
       <!-- Close button -->
       <button style="position:absolute; top:1.25rem; right:1.25rem; background:none; border:none; color:var(--text-muted); font-size:1.3rem; cursor:pointer;" onclick="app.closeStarWizard()">✕</button>
 
-      <!-- Animated Star Mascot -->
-      <div class="star-mascot-wrap">
-        <svg class="star-svg" viewBox="0 0 100 100">
-          <defs>
-            <radialGradient id="starGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#fef08a" />
-              <stop offset="50%" stop-color="#f59e0b" />
-              <stop offset="100%" stop-color="#d97706" />
-            </radialGradient>
-          </defs>
-          <polygon points="50,5 64,36 98,36 70,57 81,91 50,70 19,91 30,57 2,36 36,36" fill="url(#starGlow)" stroke="#fef08a" stroke-width="2"/>
-          <circle cx="42" cy="45" r="3.5" fill="#000" />
-          <circle cx="58" cy="45" r="3.5" fill="#000" />
-          <circle cx="36" cy="51" r="3" fill="#f43f5e" opacity="0.6" />
-          <circle cx="64" cy="51" r="3" fill="#f43f5e" opacity="0.6" />
-          <path d="M44 52 Q50 58 56 52" stroke="#000" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        </svg>
-      </div>
+      <!-- Wizard Galaxy Header & 5-Step Stepper -->
+      <div class="wizard-galaxy-header">
+        <div class="wizard-badge-row">
+          <div class="wizard-cosmic-badge">
+            <span class="pulsar-node"></span>
+            <span>RuleMind Bot Architect</span>
+          </div>
+          <div class="wizard-step-counter" id="wizard-step-counter">STEP 1 OF 5</div>
+        </div>
+        <h3 class="wizard-title" id="wizard-title-display">Decide Bot Name & Identity</h3>
+        <p class="wizard-subtitle" id="wizard-subtitle-display">Give your new bot a name and define its primary operational objective for your storefront.</p>
 
-      <!-- Star Speech Bubble -->
-      <div class="star-speech-bubble" id="star-speech-text">
-        Hi there! ✨ I'm your RuleMind Architect. Let's create your new database-powered bot together!
+        <!-- 5-Step Progress Stepper -->
+        <div class="stepper-bar-container">
+          <div class="stepper-progress-track">
+            <div class="stepper-progress-fill" id="stepper-progress-fill" style="width: 20%;"></div>
+          </div>
+          <div class="stepper-steps-row">
+            <div class="stepper-step-node active" id="stepper-node-1" onclick="app.showWizardStep(1)">
+              <div class="step-bubble">1</div>
+              <span class="step-name">Name</span>
+            </div>
+            <div class="stepper-step-node" id="stepper-node-2" onclick="app.showWizardStep(2)">
+              <div class="step-bubble">2</div>
+              <span class="step-name">Website Q&A</span>
+            </div>
+            <div class="stepper-step-node" id="stepper-node-3" onclick="app.showWizardStep(3)">
+              <div class="step-bubble">3</div>
+              <span class="step-name">Extra Rules</span>
+            </div>
+            <div class="stepper-step-node" id="stepper-node-4" onclick="app.showWizardStep(4)">
+              <div class="step-bubble">4</div>
+              <span class="step-name">Platform</span>
+            </div>
+            <div class="stepper-step-node" id="stepper-node-5" onclick="app.showWizardStep(5)">
+              <div class="step-bubble">5</div>
+              <span class="step-name">Instructions</span>
+            </div>
+          </div>
+        </div>
       </div>
+      <div id="star-speech-text" style="display:none;"></div>
 
       <!-- STEP 1: Decide Name of Bot -->
       <div class="wizard-step active" id="star-step-1">

@@ -18,21 +18,23 @@ app.use(cors({
 
 app.use(express.json());
 
-// Normalize URLs in serverless so both /api/... and /... match Express routes
-app.use((req, res, next) => {
-  if (req.url && !req.url.startsWith('/api') && !req.url.startsWith('/css') && !req.url.startsWith('/js')) {
-    req.url = '/api' + req.url;
-  }
-  next();
-});
+// Serve static assets locally
+const publicDir = path.join(__dirname, '..', 'public');
+app.use(express.static(publicDir));
 
-// Serve static assets locally (on Vercel, Edge CDN serves public/ automatically)
-if (!process.env.VERCEL) {
-  app.use(express.static(path.join(__dirname, 'public')));
-}
+// Fallback for root path locally
+app.get('/', (req, res, next) => {
+  res.sendFile(path.join(publicDir, 'index.html'), (err) => {
+    if (err) next();
+  });
+});
 
 // Health check endpoint for /api
 app.get('/api', (req, res) => {
+  res.json({ success: true, status: 'ok', service: 'RuleMind Engine API', timestamp: new Date().toISOString() });
+});
+
+app.get('/api/health', (req, res) => {
   res.json({ success: true, status: 'ok', service: 'RuleMind Engine API', timestamp: new Date().toISOString() });
 });
 

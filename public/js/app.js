@@ -944,6 +944,45 @@ add_action('wp_footer', function() {
     document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
     const stepEl = document.getElementById(`star-step-${stepNum}`);
     if (stepEl) stepEl.classList.add('active');
+
+    // Update Stepper Progress Track Fill
+    const fillEl = document.getElementById('stepper-progress-fill');
+    if (fillEl) fillEl.style.width = `${stepNum * 20}%`;
+
+    // Update Stepper Nodes
+    for (let i = 1; i <= 5; i++) {
+      const node = document.getElementById(`stepper-node-${i}`);
+      if (!node) continue;
+      const bubble = node.querySelector('.step-bubble');
+      node.classList.remove('active', 'completed');
+      if (i < stepNum) {
+        node.classList.add('completed');
+        if (bubble) bubble.textContent = '✓';
+      } else if (i === stepNum) {
+        node.classList.add('active');
+        if (bubble) bubble.textContent = i;
+      } else {
+        if (bubble) bubble.textContent = i;
+      }
+    }
+
+    // Update Counter & Titles
+    const counterEl = document.getElementById('wizard-step-counter');
+    if (counterEl) counterEl.textContent = `STEP ${stepNum} OF 5`;
+
+    const titles = {
+      1: { t: 'Decide Bot Name & Identity', s: 'Give your bot a name for your store and customer chat widget.' },
+      2: { t: 'Bot Purpose & Website Database Questions', s: 'Define your bot purpose and what store database inquiries it handles.' },
+      3: { t: 'Extra Questions & Unknown Fallback', s: 'Add store Q&A rules and decide what to show when a question is unknown.' },
+      4: { t: 'Select Integration Platform', s: 'Where do you want to plug this bot in? Shopify, WordPress, or Custom Web.' },
+      5: { t: 'Step-by-Step Instructions & Database Access', s: `Plug "${this.wizardData.botName || 'your bot'}" directly into ${this.wizardData.platform || 'Shopify'}.` }
+    };
+    if (titles[stepNum]) {
+      const titleEl = document.getElementById('wizard-title-display');
+      const subEl = document.getElementById('wizard-subtitle-display');
+      if (titleEl) titleEl.textContent = titles[stepNum].t;
+      if (subEl) subEl.textContent = titles[stepNum].s;
+    }
   },
 
   selectWizardPurpose(purpose, el) {
@@ -1597,6 +1636,82 @@ print("SQL Ran:", data['dbQuery'])`;
     } else {
       window.open('/demo-store.html', '_blank');
     }
+  },
+
+  toggleVideoPlay() {
+    const video = document.getElementById('hero-demo-video');
+    const btn = document.getElementById('btn-video-play');
+    if (!video || !btn) return;
+    if (video.paused) {
+      video.play();
+      btn.innerHTML = '❚❚ Pause';
+    } else {
+      video.pause();
+      btn.innerHTML = '▶ Play';
+    }
+  },
+
+  toggleVideoMute() {
+    const video = document.getElementById('hero-demo-video');
+    const btn = document.getElementById('btn-video-mute');
+    if (!video || !btn) return;
+    video.muted = !video.muted;
+    btn.innerHTML = video.muted ? '🔇 Unmute' : '🔊 Mute';
+  },
+
+  runQuerySim(type, btnEl) {
+    if (btnEl) {
+      document.querySelectorAll('.query-sim-btn').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+    }
+    const terminalEl = document.getElementById('sim-terminal-body');
+    const statusBadge = document.getElementById('sim-status-badge');
+    const jsonBody = document.getElementById('sim-json-body');
+    if (!terminalEl || !jsonBody) return;
+
+    if (statusBadge) {
+      statusBadge.innerHTML = '⚡ QUERYING DATABASE...';
+      statusBadge.style.color = '#f59e0b';
+    }
+
+    if (type === 'order') {
+      terminalEl.innerHTML = `
+        <span style="color:#64748b;">// 1. Incoming shopper question:</span><br>
+        <span style="color:#fff;">"Where is my order #1042?"</span><br><br>
+        <span style="color:#64748b;">// 2. Deterministic SQL Query executed:</span><br>
+        <span class="sim-sql-kw">SELECT</span> id, status, carrier, tracking_number, items, total_usd<br>
+        <span class="sim-sql-kw">FROM</span> orders <br>
+        <span class="sim-sql-kw">WHERE</span> order_number = <span class="sim-sql-str">'1042'</span> <span class="sim-sql-kw">AND</span> customer_id = <span class="sim-sql-str">'cust_992'</span>;
+      `;
+      jsonBody.textContent = `{\n  "order_id": 1042,\n  "customer": "Jane Doe",\n  "status": "out_for_delivery",\n  "carrier": "FedEx Express",\n  "tracking": "FX-982194821",\n  "items": [\n    { "name": "Minimalist Matte Black Desk Mat", "qty": 1, "price": 48.00 },\n    { "name": "Stealth Black PBT Keycaps Set", "qty": 1, "price": 60.00 }\n  ],\n  "total": 108.00,\n  "eta": "Today by 5:30 PM"\n}`;
+    } else if (type === 'stock') {
+      terminalEl.innerHTML = `
+        <span style="color:#64748b;">// 1. Incoming shopper question:</span><br>
+        <span style="color:#fff;">"Is the Stealth Black PBT Keycaps Set in stock?"</span><br><br>
+        <span style="color:#64748b;">// 2. Warehouse REST & SQL Inventory Query:</span><br>
+        <span class="sim-sql-kw">SELECT</span> sku, product_name, stock_qty, warehouse_shelf, reorder_point<br>
+        <span class="sim-sql-kw">FROM</span> inventory_items<br>
+        <span class="sim-sql-kw">WHERE</span> sku = <span class="sim-sql-str">'SKU-002'</span>;
+      `;
+      jsonBody.textContent = `{\n  "sku": "SKU-002",\n  "product_name": "Stealth Black PBT Keycaps Set",\n  "stock_qty": 34,\n  "status": "in_stock",\n  "warehouse_shelf": "W3-B12",\n  "ships_in": "24 hours"\n}`;
+    } else if (type === 'policy') {
+      terminalEl.innerHTML = `
+        <span style="color:#64748b;">// 1. Incoming shopper question:</span><br>
+        <span style="color:#fff;">"What is your return policy?"</span><br><br>
+        <span style="color:#64748b;">// 2. Rule evaluation: rule_code = 'RETURN_POLICY_30D'</span><br>
+        <span class="sim-sql-kw">SELECT</span> rule_key, condition_type, action_payload<br>
+        <span class="sim-sql-kw">FROM</span> store_rules<br>
+        <span class="sim-sql-kw">WHERE</span> rule_key = <span class="sim-sql-str">'RETURN_POLICY_30D'</span> <span class="sim-sql-kw">AND</span> active = <span class="sim-sql-num">1</span>;
+      `;
+      jsonBody.textContent = `{\n  "rule_key": "RETURN_POLICY_30D",\n  "title": "30-Day Hassle-Free Returns",\n  "conditions": { "order_within_days": 30, "unopened_seal": true },\n  "return_portal_url": "https://mind-chat-323j.vercel.app/returns",\n  "refund_method": "original_payment_method"\n}`;
+    }
+
+    setTimeout(() => {
+      if (statusBadge) {
+        statusBadge.innerHTML = '⚡ 38ms EXECUTION (ZERO-AI)';
+        statusBadge.style.color = '#10b981';
+      }
+    }, 150);
   },
 
   // -------------------------------------------------------------
